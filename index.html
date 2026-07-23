@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Affordability Studio</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      if (window.location.protocol === "file:") {
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = "./dist/assets/main.css";
+        document.head.appendChild(css);
+        import(/* @vite-ignore */ "./dist/assets/main.js");
+      } else {
+        import("/src/main.jsx");
+      }
+    </script>
+  </body>
+</html>
