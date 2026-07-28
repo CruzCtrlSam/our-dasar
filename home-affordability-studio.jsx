@@ -48,6 +48,15 @@ function monthlyPI(loan, annualRatePct, years) {
   return (loan * (r * f)) / (f - 1);
 }
 
+function monthlyLoanPayment(loan, annualRatePct, months) {
+  const n = Math.round(months);
+  const r = annualRatePct / 100 / 12;
+  if (n <= 0 || loan <= 0) return 0;
+  if (r === 0) return loan / n;
+  const f = Math.pow(1 + r, n);
+  return (loan * (r * f)) / (f - 1);
+}
+
 function healthOf(rate) {
   if (rate < 0) return { label: "Over budget", tone: "bad", color: C.coral };
   if (rate < 5) return { label: "Very tight", tone: "warn", color: C.amber };
@@ -100,7 +109,11 @@ const DEFAULT_APP_STATE = {
   car: {
     price: "28000",
     downPayment: "3000",
-    payment: "475",
+    tradeIn: "0",
+    rate: "8.5",
+    termMonths: "72",
+    salesTaxPct: "7",
+    fees: "900",
     insurance: "165",
     fuel: "180",
     maintenance: "90",
@@ -131,6 +144,12 @@ const DEFAULT_APP_STATE = {
     car: true,
     child: true,
   },
+  stackMoves: {
+    home: false,
+    rent: false,
+    car: false,
+    child: false,
+  },
   committed: [],
 };
 
@@ -152,6 +171,10 @@ const GLOSSARY = {
   "emergency fund": "Savings set aside for unexpected problems like job loss, urgent repairs, or medical costs.",
   "car insurance": "Insurance that helps cover damage, liability, or losses related to a vehicle.",
   "car maintenance": "Routine vehicle costs like oil changes, tires, brakes, repairs, and inspections.",
+  "trade-in value": "Money a dealer gives you for your current vehicle, usually applied against the next car purchase.",
+  "sales tax": "Tax charged on the vehicle purchase. It can add thousands to the amount paid or financed.",
+  "amount financed": "The part of the vehicle cost that becomes the loan after down payment, trade-in, taxes, and fees.",
+  "loan term": "How long the loan lasts. A longer term lowers the monthly payment but usually increases total interest.",
   "home maintenance": "Money set aside for repairs and upkeep, like appliances, roof work, plumbing, or yard care.",
   internet: "Monthly home internet service.",
   "streaming services": "Monthly video, music, or entertainment subscriptions like Netflix, Hulu, Spotify, or similar services.",
@@ -174,6 +197,7 @@ function mergeDefaults(base, saved) {
     rentMove: { ...base.rentMove, ...(saved.rentMove || {}) },
     child: { ...base.child, ...(saved.child || {}) },
     enabledMoves: { ...base.enabledMoves, ...(saved.enabledMoves || {}) },
+    stackMoves: { ...base.stackMoves, ...(saved.stackMoves || {}) },
     committed: Array.isArray(saved.committed) ? saved.committed : base.committed,
   };
 }
@@ -310,6 +334,7 @@ export default function App() {
   const rentMovePlan = saved.rentMove;
   const childPlan = saved.child;
   const enabledMoves = saved.enabledMoves;
+  const stackMoves = saved.stackMoves;
 
   const setLifeField = (key) => (value) =>
     setSaved((s) => ({ ...s, life: { ...s.life, [key]: value } }));
@@ -325,6 +350,12 @@ export default function App() {
     setSaved((s) => ({
       ...s,
       enabledMoves: { ...s.enabledMoves, [key]: checked },
+      stackMoves: checked ? s.stackMoves : { ...s.stackMoves, [key]: false },
+    }));
+  const setStackMove = (key) => (checked) =>
+    setSaved((s) => ({
+      ...s,
+      stackMoves: { ...s.stackMoves, [key]: checked },
     }));
 
   /* --- mortgage --- */
@@ -583,8 +614,24 @@ export default function App() {
   const baseMonthlyCushion = m.income - baseMonthlySpend;
   const runwayMonths =
     baseMonthlySpend > 0 ? num(savingsBalance) / baseMonthlySpend : Infinity;
+  const carTax = num(carPlan.price) * num(carPlan.salesTaxPct) / 100;
+  const carCashDue = num(carPlan.downPayment);
+  const carAmountFinanced = Math.max(
+    0,
+    num(carPlan.price) + carTax + num(carPlan.fees) - num(carPlan.downPayment) - num(carPlan.tradeIn)
+  );
+  const carLoanPayment = monthlyLoanPayment(carAmountFinanced, num(carPlan.rate), num(carPlan.termMonths));
   const carMonthly =
-    num(carPlan.payment) + num(carPlan.insurance) + num(carPlan.fuel) + num(carPlan.maintenance);
+    carLoanPayment + num(carPlan.insurance) + num(carPlan.fuel) + num(carPlan.maintenance);
+  const carSavingsAfter = num(savingsBalance) - carCashDue;
+  const carCushionAfter = baseMonthlyCushion - carMonthly;
+  const carTone =
+    carCushionAfter < 0 || carSavingsAfter < num(emergencyKeep)
+      ? "bad"
+      : carCushionAfter < 500 || carSavingsAfter < num(emergencyKeep) * 1.25
+      ? "warn"
+      : "ok";
+  const homeMonthlyDelta = m.housingMo - (activeHousing + num(utilities));
   const rentMoveNetRent = Math.max(0, num(rentMovePlan.newRent) - num(rentMovePlan.roommateShare));
   const rentMoveMonthlyDelta = rentMoveNetRent + num(rentMovePlan.newUtilities) - (activeHousing + num(utilities));
   const rentMoveUpfront =
@@ -679,6 +726,9 @@ export default function App() {
             baseMonthlyCushion={baseMonthlyCushion}
             baseMonthlySpend={baseMonthlySpend}
             carMonthly={carMonthly}
+            carTone={carTone}
+            carCashDue={carCashDue}
+            homeMonthlyDelta={homeMonthlyDelta}
             rentMoveMonthlyDelta={rentMoveMonthlyDelta}
             rentMoveUpfront={rentMoveUpfront}
             childMonthly={childMonthly}
@@ -686,7 +736,9 @@ export default function App() {
             runwayMonths={runwayMonths}
             lifeReadiness={lifeReadiness}
             enabledMoves={enabledMoves}
+            stackMoves={stackMoves}
             setMoveEnabled={setMoveEnabled}
+            setStackMove={setStackMove}
             setModule={setModule}
           />
         )}
@@ -721,7 +773,15 @@ export default function App() {
             plan={carPlan}
             setField={setCarField}
             monthly={carMonthly}
+            loanPayment={carLoanPayment}
+            amountFinanced={carAmountFinanced}
+            tax={carTax}
+            cashDue={carCashDue}
+            cushionAfter={carCushionAfter}
+            savingsAfter={carSavingsAfter}
+            tone={carTone}
             baseMonthlyCushion={baseMonthlyCushion}
+            emergencyKeep={num(emergencyKeep)}
             savings={num(savingsBalance)}
           />
         )}
@@ -1330,6 +1390,9 @@ function SnapshotDashboard({
   baseMonthlyCushion,
   baseMonthlySpend,
   carMonthly,
+  carTone,
+  carCashDue,
+  homeMonthlyDelta,
   rentMoveMonthlyDelta,
   rentMoveUpfront,
   childMonthly,
@@ -1337,7 +1400,9 @@ function SnapshotDashboard({
   runwayMonths,
   lifeReadiness,
   enabledMoves,
+  stackMoves,
   setMoveEnabled,
+  setStackMove,
   setModule,
 }) {
   const moveOptions = [
@@ -1346,6 +1411,35 @@ function SnapshotDashboard({
     { key: "car", label: "Buy a car", icon: Car },
     { key: "child", label: "Baby / child", icon: Baby },
   ];
+  const stackOptions = [
+    { key: "home", label: "Buy a home", monthly: homeMonthlyDelta, upfront: m.cashToClose, icon: Home },
+    { key: "rent", label: "Rent / move", monthly: rentMoveMonthlyDelta, upfront: rentMoveUpfront, icon: KeyRound },
+    { key: "car", label: "Buy a car", monthly: carMonthly, upfront: carCashDue, icon: Car },
+    { key: "child", label: "Baby / child", monthly: childMonthly, upfront: childUpfront, icon: Baby },
+  ].filter((move) => enabledMoves[move.key]);
+  const selectedStack = stackOptions.filter((move) => stackMoves[move.key]);
+  const stackMonthly = selectedStack.reduce((sum, move) => sum + move.monthly, 0);
+  const stackUpfront = selectedStack.reduce((sum, move) => sum + move.upfront, 0);
+  const stackCushionAfter = baseMonthlyCushion - stackMonthly;
+  const stackSavingsAfter = num(life.savingsBalance) - stackUpfront;
+  const stackEmergencyKeep = num(life.emergencyKeep);
+  const stackTone =
+    !selectedStack.length
+      ? "neutral"
+      : stackCushionAfter < 0 || stackSavingsAfter < stackEmergencyKeep
+      ? "bad"
+      : stackCushionAfter < 500 || stackSavingsAfter < stackEmergencyKeep * 1.25
+      ? "warn"
+      : "ok";
+  const stackLabel =
+    !selectedStack.length
+      ? "Pick moves"
+      : stackTone === "ok"
+      ? "Fits together"
+      : stackTone === "warn"
+      ? "Tight together"
+      : "Too much together";
+  const housingConflict = stackMoves.home && stackMoves.rent && enabledMoves.home && enabledMoves.rent;
   return (
     <div className="haf-dash">
       <div className="haf-vitals">
@@ -1376,6 +1470,70 @@ function SnapshotDashboard({
               </label>
             ))}
           </div>
+        </section>
+
+        <section className="haf-panel">
+          <div className="haf-panel-head">
+            <div>
+              <h3>Stack moves together</h3>
+              <p>Mix scenarios to see whether a few big choices can fit at the same time.</p>
+            </div>
+            <Badge tone={stackTone}>{stackLabel}</Badge>
+          </div>
+          <div className="haf-check-grid">
+            {stackOptions.map(({ key, label, icon: Icon }) => (
+              <label key={key} className={`haf-check-card ${stackMoves[key] ? "is-on" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={!!stackMoves[key]}
+                  onChange={(e) => setStackMove(key)(e.target.checked)}
+                />
+                <Icon size={17} strokeWidth={2.1} />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <div className="haf-target-grid">
+            <Mini k="Monthly impact" v={`${stackMonthly >= 0 ? "+" : ""}${usd0(stackMonthly)}/mo`} accent />
+            <Mini k="Upfront cash" v={usd0(stackUpfront)} />
+            <Mini k="Cushion after" v={usd0(stackCushionAfter)} />
+            <Mini k="Savings after" v={usd0(stackSavingsAfter)} />
+            <Mini k="Emergency floor" v={usd0(stackEmergencyKeep)} />
+            <Mini k="Moves selected" v={`${selectedStack.length}`} />
+          </div>
+          {selectedStack.length ? (
+            <div className="haf-rebuild">
+              <div className="haf-rebuild-col">
+                <h4>Monthly stack</h4>
+                {selectedStack.map((move) => (
+                  <Row key={move.key} k={move.label} v={move.monthly} />
+                ))}
+                <Row k="Total monthly impact" v={stackMonthly} total tone={stackTone} />
+              </div>
+              <div className="haf-rebuild-col">
+                <h4>Cash stack</h4>
+                {selectedStack.map((move) => (
+                  <Row key={move.key} k={move.label} v={move.upfront} />
+                ))}
+                <Row k="Total upfront cash" v={stackUpfront} total tone={stackTone} />
+              </div>
+            </div>
+          ) : (
+            <Flag tone="warn" icon={AlertTriangle}>
+              Choose two or more moves above when you want to test real-life temptation stacking.
+            </Flag>
+          )}
+          {selectedStack.length > 0 && (
+            <Flag tone={housingConflict || stackTone === "bad" ? "bad" : stackTone === "warn" ? "warn" : "ok"} icon={housingConflict || stackTone === "bad" ? AlertTriangle : CheckCircle2}>
+              {housingConflict
+                ? "Buying a home and renting/moving are usually alternate housing paths, so compare them separately unless you truly expect both."
+                : stackTone === "bad"
+                ? "This combination breaks either monthly cushion or emergency savings. It needs a smaller move, more cash, or more income."
+                : stackTone === "warn"
+                ? "This combination can work, but it leaves little room for surprises."
+                : "This combination keeps monthly cushion and emergency savings intact."}
+            </Flag>
+          )}
         </section>
 
         <section className="haf-panel">
@@ -1425,7 +1583,7 @@ function SnapshotDashboard({
           <div className="haf-plan-stack">
             {enabledMoves.home && <PlanCard icon={Home} title="Buy a home" value={m.readyNow ? "Ready now" : isFinite(m.months) ? `${Math.ceil(m.months)} mo` : "Not yet"} sub={`${usd0(m.housingMo)}/mo after purchase`} tone={m.readyNow ? "ok" : "warn"} onOpen={() => setModule("home")} />}
             {enabledMoves.rent && <PlanCard icon={KeyRound} title="Rent / move" value={`${rentMoveMonthlyDelta >= 0 ? "+" : ""}${usd0(rentMoveMonthlyDelta)}/mo`} sub={`${usd0(rentMoveUpfront)} upfront`} tone={rentMoveMonthlyDelta <= baseMonthlyCushion ? "ok" : "warn"} onOpen={() => setModule("rent")} />}
-            {enabledMoves.car && <PlanCard icon={Car} title="Buy a car" value={`${usd0(carMonthly)}/mo`} sub={`Leaves ${usd0(baseMonthlyCushion - carMonthly)}/mo cushion`} tone={baseMonthlyCushion - carMonthly >= 0 ? "ok" : "bad"} onOpen={() => setModule("car")} />}
+            {enabledMoves.car && <PlanCard icon={Car} title="Buy a car" value={`${usd0(carMonthly)}/mo`} sub={`Leaves ${usd0(baseMonthlyCushion - carMonthly)}/mo cushion`} tone={carTone} onOpen={() => setModule("car")} />}
             {enabledMoves.child && <PlanCard icon={Baby} title="Baby / child" value={`${usd0(childMonthly)}/mo`} sub={`${usd0(childUpfront)} upfront or leave impact`} tone={baseMonthlyCushion - childMonthly >= 0 ? "ok" : "bad"} onOpen={() => setModule("child")} />}
             {!Object.values(enabledMoves).some(Boolean) && (
               <Flag tone="warn" icon={AlertTriangle}>
@@ -1515,11 +1673,56 @@ function RentMoveModule({ plan, setField, activeHousing, currentUtilities, month
   );
 }
 
-function CarModule({ plan, setField, monthly, baseMonthlyCushion, savings }) {
-  const upfront = num(plan.downPayment);
-  const cushionAfter = baseMonthlyCushion - monthly;
-  const savingsAfter = savings - upfront;
-  const tone = cushionAfter < 0 || savingsAfter < 0 ? "bad" : cushionAfter < 500 ? "warn" : "ok";
+function CarModule({
+  plan,
+  setField,
+  monthly,
+  loanPayment,
+  amountFinanced,
+  tax,
+  cashDue,
+  cushionAfter,
+  savingsAfter,
+  tone,
+  baseMonthlyCushion,
+  emergencyKeep,
+  savings,
+}) {
+  const termMonths = Math.max(0, Math.round(num(plan.termMonths)));
+  const totalInterest = Math.max(0, loanPayment * termMonths - amountFinanced);
+  const cashGap = Math.max(0, emergencyKeep - savingsAfter);
+  const label =
+    tone === "bad"
+      ? savingsAfter < emergencyKeep
+        ? "Not ready"
+        : "Risky"
+      : tone === "warn"
+      ? "Tight"
+      : "Fits";
+  const flag =
+    cushionAfter < 0
+      ? {
+          tone: "bad",
+          icon: AlertTriangle,
+          body: <>This car creates a monthly shortfall. The payment and car costs are more than your current <b>monthly cushion</b>.</>,
+        }
+      : savingsAfter < emergencyKeep
+      ? {
+          tone: "bad",
+          icon: AlertTriangle,
+          body: <>The monthly payment works, but the down payment leaves savings <b>{usd0(cashGap)} below</b> your emergency cushion.</>,
+        }
+      : tone === "warn"
+      ? {
+          tone: "warn",
+          icon: TrendingDown,
+          body: <>This can work, but it leaves a thin buffer. A lower price, bigger down payment, or shorter term may make it sturdier.</>,
+        }
+      : {
+          tone: "ok",
+          icon: CheckCircle2,
+          body: <>This keeps your monthly cushion positive and leaves savings above your emergency floor.</>,
+        };
   return (
     <div className="haf-single">
       <div className="haf-layout">
@@ -1528,11 +1731,20 @@ function CarModule({ plan, setField, monthly, baseMonthlyCushion, savings }) {
             <div className="haf-group-head"><span className="haf-group-title"><Car size={16} /> Car scenario</span></div>
             <div className="haf-group-body">
               <Field label="Car price" prefix="$" value={plan.price} onChange={setField("price")} />
-              <Field label="Down payment" term="down payment" prefix="$" value={plan.downPayment} onChange={setField("downPayment")} />
-              <Field label="Car payment" prefix="$" value={plan.payment} onChange={setField("payment")} />
+              <div className="haf-grid2">
+                <Field label="Down payment" term="down payment" prefix="$" value={plan.downPayment} onChange={setField("downPayment")} />
+                <Field label="Trade-in value" term="trade-in value" prefix="$" value={plan.tradeIn} onChange={setField("tradeIn")} />
+                <Field label="Interest rate" suffix="%" value={plan.rate} onChange={setField("rate")} />
+                <Field label="Loan term" term="loan term" suffix="mo" value={plan.termMonths} onChange={setField("termMonths")} />
+                <Field label="Sales tax" term="sales tax" suffix="%" value={plan.salesTaxPct} onChange={setField("salesTaxPct")} />
+                <Field label="Title / dealer fees" term="upfront cost" prefix="$" value={plan.fees} onChange={setField("fees")} />
+              </div>
               <Field label="Insurance" prefix="$" value={plan.insurance} onChange={setField("insurance")} />
               <Field label="Gas / charging" prefix="$" value={plan.fuel} onChange={setField("fuel")} />
               <Field label="Maintenance" prefix="$" value={plan.maintenance} onChange={setField("maintenance")} />
+              <div className="haf-field-foot haf-foot-sum">
+                Estimated loan payment: <b>{usd0(loanPayment)}/mo</b>
+              </div>
             </div>
           </section>
         </aside>
@@ -1544,28 +1756,55 @@ function CarModule({ plan, setField, monthly, baseMonthlyCushion, savings }) {
                 <div className="haf-verdict-v" style={{ color: tone === "bad" ? C.coral : tone === "warn" ? C.amber : C.emerald }}>
                   {usd0(monthly)}<span>/mo</span>
                 </div>
-                <div className="haf-verdict-sub">Leaves {usd0(cushionAfter)}/mo monthly cushion and {usd0(savingsAfter)} saved.</div>
+                <div className="haf-verdict-sub">
+                  Leaves {usd0(cushionAfter)}/mo monthly cushion and {usd0(savingsAfter)} saved after down payment.
+                </div>
               </div>
-              <Badge tone={tone}>{tone === "ok" ? "Fits" : tone === "warn" ? "Tight" : "Risky"}</Badge>
+              <Badge tone={tone}>{label}</Badge>
+            </div>
+            <div className="haf-target-grid">
+              <Mini k="Amount financed" v={usd0(amountFinanced)} accent />
+              <Mini k="Cash due today" v={usd0(cashDue)} />
+              <Mini k="Savings after" v={usd0(savingsAfter)} />
+              <Mini k="Emergency floor" v={usd0(emergencyKeep)} />
+              <Mini k="Loan interest" v={usd0(totalInterest)} />
+              <Mini k="Current savings" v={usd0(savings)} />
             </div>
             <div className="haf-rebuild">
               <div className="haf-rebuild-col">
                 <h4>Car cost</h4>
-                <Row k="Payment" v={num(plan.payment)} />
+                <Row k="Loan payment" v={loanPayment} />
                 <Row k="Insurance" v={num(plan.insurance)} />
                 <Row k="Gas / charging" v={num(plan.fuel)} />
                 <Row k="Maintenance" v={num(plan.maintenance)} />
                 <Row k="Total" v={monthly} total />
               </div>
               <div className="haf-rebuild-col">
-                <h4>Impact</h4>
+                <h4>Loan build</h4>
+                <Row k="Car price" v={num(plan.price)} />
+                <Row k="Sales tax" v={tax} />
+                <Row k="Title / dealer fees" v={num(plan.fees)} />
+                <Row k="Down payment" v={-num(plan.downPayment)} />
+                <Row k="Trade-in value" v={-num(plan.tradeIn)} />
+                <Row k="Amount financed" v={amountFinanced} total />
+              </div>
+              <div className="haf-rebuild-col">
+                <h4>Cash flow impact</h4>
                 <Row k="Current cushion" v={baseMonthlyCushion} />
                 <Row k="Car monthly cost" v={-monthly} />
                 <Row k="Cushion after car" v={cushionAfter} total tone={tone} />
               </div>
+              <div className="haf-rebuild-col">
+                <h4>Savings impact</h4>
+                <Row k="Savings today" v={savings} />
+                <Row k="Down payment" v={-num(plan.downPayment)} />
+                <Row k="Savings after car" v={savingsAfter} />
+                <Row k="Emergency cushion to keep" v={emergencyKeep} />
+                <Row k={cashGap > 0 ? "Below cushion by" : "Above cushion by"} v={cashGap > 0 ? cashGap : savingsAfter - emergencyKeep} total tone={cashGap > 0 ? "bad" : tone} />
+              </div>
             </div>
-            <Flag tone={tone} icon={tone === "bad" ? AlertTriangle : CheckCircle2}>
-              The car should not quietly erase your <b>monthly cushion</b> or drain the savings you need for other plans.
+            <Flag tone={flag.tone} icon={flag.icon}>
+              {flag.body}
             </Flag>
           </section>
         </main>
