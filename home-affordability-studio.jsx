@@ -641,6 +641,50 @@ export default function App() {
     num(childPlan.food) + num(childPlan.clothing) + num(childPlan.collegeSavings);
   const childUpfront =
     num(childPlan.medicalOrAdoption) + num(childPlan.nurseryGear) + num(childPlan.leaveIncomeLoss);
+  const afterHomeCashToday = m.have - m.cashToClose;
+  const afterHomeExtraCash = afterHomeCashToday - m.cushion;
+  const roomAfterHomeOptions = [
+    enabledMoves.car && {
+      key: "car",
+      label: "Buy the car scenario",
+      monthly: carMonthly,
+      upfront: carCashDue,
+      icon: Car,
+    },
+    enabledMoves.child && {
+      key: "child",
+      label: childPlan.path === "adoption" ? "Adopt a child" : "Have a baby",
+      monthly: childMonthly,
+      upfront: childUpfront,
+      icon: Baby,
+    },
+  ].filter(Boolean).map((option) => {
+    const monthlyAfter = m.savingsPost - option.monthly;
+    const cashAfter = afterHomeCashToday - option.upfront;
+    const tone =
+      monthlyAfter < 0 || cashAfter < m.cushion
+        ? "bad"
+        : monthlyAfter < 500 || cashAfter < m.cushion * 1.25
+        ? "warn"
+        : "ok";
+    return { ...option, monthlyAfter, cashAfter, tone };
+  });
+  const hasRoomAfterHome = roomAfterHomeOptions.some((option) => option.tone === "ok");
+  const hasTightRoomAfterHome = roomAfterHomeOptions.some((option) => option.tone === "warn");
+  const homeRoomTone =
+    afterHomeCashToday < m.cushion || m.savingsPost < 0
+      ? "bad"
+      : hasRoomAfterHome
+      ? "ok"
+      : hasTightRoomAfterHome
+      ? "warn"
+      : "bad";
+  const homeRoomLabel =
+    homeRoomTone === "ok"
+      ? "Room left"
+      : homeRoomTone === "warn"
+      ? "Tight room"
+      : "No extra room";
   const lifeReadiness = healthOf(m.income > 0 ? (baseMonthlyCushion / m.income) * 100 : 0);
   const commitHome = () => {
     const committedHome = {
@@ -989,6 +1033,50 @@ export default function App() {
                     <Row k="− Fun" v={-num(fun)} />
                     <Row k="= For savings" v={m.savingsPost} total tone={hPost.tone} />
                   </div>
+                </div>
+
+                <div className="haf-next-room">
+                  <div className="haf-panel-head">
+                    <div>
+                      <h3><Car size={17} strokeWidth={2.1} /> Room for another move?</h3>
+                      <p>After this house, check whether another big plan still fits without breaking the monthly cushion or emergency floor.</p>
+                    </div>
+                    <Badge tone={homeRoomTone}>{homeRoomLabel}</Badge>
+                  </div>
+                  <div className="haf-target-grid">
+                    <Mini k="Monthly room after home" v={usd0(m.savingsPost)} accent />
+                    <Mini k="Cash after closing" v={usd0(afterHomeCashToday)} />
+                    <Mini k="Emergency floor" v={usd0(m.cushion)} />
+                    <Mini k="Cash above floor" v={usd0(afterHomeExtraCash)} />
+                    <Mini k="Car scenario" v={enabledMoves.car ? usd0(carMonthly) + "/mo" : "Off"} />
+                    <Mini k="Baby / child" v={enabledMoves.child ? usd0(childMonthly) + "/mo" : "Off"} />
+                  </div>
+                  {roomAfterHomeOptions.length ? (
+                    <div className="haf-rebuild">
+                      {roomAfterHomeOptions.map(({ key, label, monthly, upfront, monthlyAfter, cashAfter, tone, icon: Icon }) => (
+                        <div className="haf-rebuild-col" key={key}>
+                          <h4><Icon size={13} strokeWidth={2.2} /> {label}</h4>
+                          <Row k="Adds monthly" v={monthly} />
+                          <Row k="Needs upfront" v={upfront} />
+                          <Row k="Monthly room after both" v={monthlyAfter} />
+                          <Row k="Savings after both" v={cashAfter} total tone={tone} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Flag tone="warn" icon={AlertTriangle}>
+                      Turn on another life move from the Life snapshot to compare it against this house.
+                    </Flag>
+                  )}
+                  {roomAfterHomeOptions.length > 0 && (
+                    <Flag tone={homeRoomTone} icon={homeRoomTone === "bad" ? AlertTriangle : homeRoomTone === "warn" ? TrendingDown : CheckCircle2}>
+                      {homeRoomTone === "ok"
+                        ? "This house still leaves enough room for at least one other selected move."
+                        : homeRoomTone === "warn"
+                        ? "There is some room after the house, but the next move would leave a thin buffer."
+                        : "This house should probably be the only big move for now. Another purchase would break cash flow or dip below the emergency floor."}
+                    </Flag>
+                  )}
                 </div>
               </div>
             )}
@@ -2127,6 +2215,7 @@ const CSS = `
 .haf-primary-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;
   background:${C.teal};color:#fff;font:inherit;font-size:13px;font-weight:650;padding:10px 13px;cursor:pointer;
   white-space:nowrap;}
+.haf-next-room{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column;gap:18px;}
 
 /* verdict */
 .haf-verdict{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}
