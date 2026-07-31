@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine,
@@ -67,6 +67,312 @@ function healthOf(rate) {
 
 const HEALTHY_FLOOR = 10; // % of income we treat as a healthy savings floor
 const STORAGE_KEY = "life-move-studio:v1";
+
+const LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+  { code: "fr", label: "Français" },
+  { code: "zh", label: "中文" },
+  { code: "fil", label: "Filipino" },
+  { code: "vi", label: "Tiếng Việt" },
+];
+
+const TRANSLATIONS = {
+  es: {
+    "Life move studio": "Estudio de decisiones de vida",
+    "What happens to your life if you do this?": "¿Qué pasa con tu vida si haces esto?",
+    "Save one life snapshot, test big decisions as scenarios, then commit the moves that become real so every other plan sees the new picture.": "Guarda una foto de tu vida financiera, prueba decisiones grandes como escenarios y confirma las que se vuelvan reales para que todos los demás planes usen la nueva realidad.",
+    Language: "Idioma",
+    "Life snapshot": "Foto de vida",
+    "Real life": "Vida real",
+    "Buy a home": "Comprar casa",
+    "Rent / move": "Rentar / mudarse",
+    "Buy a car": "Comprar carro",
+    "Baby / child": "Bebé / hijo",
+    "Home & loan": "Casa y préstamo",
+    "Upfront costs": "Costos iniciales",
+    "Monthly home costs": "Costos mensuales de la casa",
+    "Real life / actual expenses": "Vida real / gastos actuales",
+    "Car scenario": "Escenario de carro",
+    "Rent / move scenario": "Escenario de renta / mudanza",
+    "Baby / child scenario": "Escenario de bebé / hijo",
+    "Choose life moves to check": "Elige decisiones para revisar",
+    "Stack moves together": "Combinar decisiones",
+    "Connected plans": "Planes conectados",
+    "Committed moves": "Decisiones confirmadas",
+    Glossary: "Glosario",
+    "After you buy": "Después de comprar",
+    Timeline: "Línea de tiempo",
+    "Stress test": "Prueba de estrés",
+    "Reverse plan": "Plan inverso",
+    "Room for another move?": "¿Queda espacio para otra decisión?",
+    "Home price": "Precio de la casa",
+    "Down payment": "Enganche",
+    "Loan term": "Plazo del préstamo",
+    "Interest rate": "Tasa de interés",
+    "Car price": "Precio del carro",
+    "Trade-in value": "Valor del carro actual",
+    "Sales tax": "Impuesto de venta",
+    "Title / dealer fees": "Título / cargos del dealer",
+    Insurance: "Seguro",
+    "Gas / charging": "Gasolina / carga",
+    Maintenance: "Mantenimiento",
+    "Income — earner 1": "Ingreso — persona 1",
+    "Income — earner 2": "Ingreso — persona 2",
+    Utilities: "Servicios",
+    Internet: "Internet",
+    "Streaming services": "Servicios de streaming",
+    "Cable TV": "Cable TV",
+    Groceries: "Comida",
+    Childcare: "Cuidado infantil",
+    Transportation: "Transporte",
+    "Car payment": "Pago del carro",
+    "Car insurance": "Seguro del carro",
+    "Car maintenance": "Mantenimiento del carro",
+    "Home maintenance": "Mantenimiento de la casa",
+    "Debt payments": "Pagos de deuda",
+    "Fun / discretionary": "Gustos / flexible",
+    "Savings balance": "Ahorros",
+    "Cushion to keep": "Colchón a mantener",
+    Fits: "Cabe",
+    Tight: "Ajustado",
+    Risky: "Riesgoso",
+    "Not ready": "No está listo",
+    "Room left": "Queda espacio",
+    "Tight room": "Espacio justo",
+    "No extra room": "Sin espacio extra",
+    "Actual monthly picture": "Panorama mensual real",
+    "Money in": "Dinero que entra",
+    "Money out": "Dinero que sale",
+    "Your life snapshot": "Tu foto de vida",
+    "Monthly money in": "Dinero mensual que entra",
+    "Monthly money out": "Dinero mensual que sale",
+    "Monthly stack": "Combinación mensual",
+    "Cash stack": "Combinación de efectivo",
+    "New home cost": "Nuevo costo de casa",
+    "What's left each month": "Lo que queda cada mes",
+    "Car cost": "Costo del carro",
+    "Loan build": "Cómo se arma el préstamo",
+    "Cash flow impact": "Impacto mensual",
+    "Savings impact": "Impacto en ahorros",
+    "Monthly child costs": "Costos mensuales del hijo",
+    "One-time / early costs": "Costos iniciales / únicos",
+  },
+  fr: {
+    "Life move studio": "Studio des grands choix de vie",
+    "What happens to your life if you do this?": "Qu’est-ce que ça change dans ta vie si tu fais ça ?",
+    "Save one life snapshot, test big decisions as scenarios, then commit the moves that become real so every other plan sees the new picture.": "Garde une photo claire de ta situation, teste les grandes décisions comme des scénarios, puis applique celles qui deviennent réelles.",
+    Language: "Langue",
+    "Life snapshot": "Portrait de vie",
+    "Real life": "Vie réelle",
+    "Buy a home": "Acheter une maison",
+    "Rent / move": "Louer / déménager",
+    "Buy a car": "Acheter une voiture",
+    "Baby / child": "Bébé / enfant",
+    "Home & loan": "Maison et prêt",
+    "Upfront costs": "Coûts au départ",
+    "Monthly home costs": "Coûts mensuels du logement",
+    "Car scenario": "Scénario voiture",
+    "After you buy": "Après l’achat",
+    Timeline: "Calendrier",
+    "Stress test": "Test de résistance",
+    "Reverse plan": "Plan à rebours",
+    "Room for another move?": "De la place pour un autre projet ?",
+    "Home price": "Prix de la maison",
+    "Down payment": "Apport",
+    "Loan term": "Durée du prêt",
+    "Interest rate": "Taux d’intérêt",
+    "Car price": "Prix de la voiture",
+    "Trade-in value": "Valeur de reprise",
+    "Sales tax": "Taxe de vente",
+    Insurance: "Assurance",
+    Maintenance: "Entretien",
+    Utilities: "Services",
+    Groceries: "Courses",
+    Childcare: "Garde d’enfant",
+    Transportation: "Transport",
+    "Savings balance": "Épargne",
+    Fits: "Ça passe",
+    Tight: "Serré",
+    Risky: "Risqué",
+    "Not ready": "Pas prêt",
+    "Room left": "Marge restante",
+    "Tight room": "Marge serrée",
+    "No extra room": "Pas de marge",
+    "Actual monthly picture": "Situation mensuelle réelle",
+    "Money in": "Argent qui entre",
+    "Money out": "Argent qui sort",
+    "Your life snapshot": "Ton portrait de vie",
+    "Monthly money in": "Revenus mensuels",
+    "Monthly money out": "Dépenses mensuelles",
+    "Monthly stack": "Cumul mensuel",
+    "Cash stack": "Cumul de cash",
+    "New home cost": "Nouveau coût du logement",
+    "What's left each month": "Ce qu’il reste chaque mois",
+    "Car cost": "Coût de la voiture",
+    "Loan build": "Construction du prêt",
+    "Cash flow impact": "Impact sur le mois",
+    "Savings impact": "Impact sur l’épargne",
+    "Monthly child costs": "Coûts mensuels de l’enfant",
+    "One-time / early costs": "Coûts initiaux / ponctuels",
+  },
+  zh: {
+    "Life move studio": "人生决定规划室",
+    "What happens to your life if you do this?": "如果这样做，你的生活会怎样变化？",
+    Language: "语言",
+    "Life snapshot": "生活快照",
+    "Real life": "现实生活",
+    "Buy a home": "买房",
+    "Rent / move": "租房 / 搬家",
+    "Buy a car": "买车",
+    "Baby / child": "宝宝 / 孩子",
+    "Home & loan": "房子和贷款",
+    "Upfront costs": "前期费用",
+    "Monthly home costs": "每月住房费用",
+    "Car scenario": "买车方案",
+    "After you buy": "购买之后",
+    Timeline: "时间线",
+    "Stress test": "压力测试",
+    "Reverse plan": "倒推计划",
+    "Room for another move?": "还有空间做另一个决定吗？",
+    "Home price": "房价",
+    "Down payment": "首付",
+    "Loan term": "贷款期限",
+    "Interest rate": "利率",
+    "Car price": "车价",
+    Insurance: "保险",
+    Maintenance: "保养",
+    Utilities: "水电杂费",
+    Groceries: "食品杂货",
+    Childcare: "托儿费用",
+    Transportation: "交通",
+    "Savings balance": "储蓄余额",
+    Fits: "可承受",
+    Tight: "偏紧",
+    Risky: "风险高",
+    "Not ready": "还没准备好",
+    "Actual monthly picture": "真实每月状况",
+    "Money in": "收入",
+    "Money out": "支出",
+    "Your life snapshot": "你的生活快照",
+    "Monthly money in": "每月收入",
+    "Monthly money out": "每月支出",
+    "New home cost": "新的住房成本",
+    "What's left each month": "每月剩余",
+    "Car cost": "汽车成本",
+    "Loan build": "贷款构成",
+    "Cash flow impact": "现金流影响",
+    "Savings impact": "储蓄影响",
+  },
+  fil: {
+    "Life move studio": "Life move studio",
+    "What happens to your life if you do this?": "Ano ang mangyayari sa buhay mo kung gagawin mo ito?",
+    Language: "Wika",
+    "Life snapshot": "Snapshot ng buhay",
+    "Real life": "Totoong buhay",
+    "Buy a home": "Bumili ng bahay",
+    "Rent / move": "Uupa / lilipat",
+    "Buy a car": "Bumili ng kotse",
+    "Baby / child": "Baby / anak",
+    "Home & loan": "Bahay at loan",
+    "Upfront costs": "Paunang gastos",
+    "Monthly home costs": "Buwanang gastos sa bahay",
+    "Car scenario": "Scenario ng kotse",
+    "After you buy": "Pagkatapos bumili",
+    Timeline: "Timeline",
+    "Stress test": "Stress test",
+    "Reverse plan": "Baliktad na plano",
+    "Room for another move?": "May puwang pa para sa isa pang plano?",
+    "Home price": "Presyo ng bahay",
+    "Down payment": "Down payment",
+    "Loan term": "Tagal ng loan",
+    "Interest rate": "Interest rate",
+    "Car price": "Presyo ng kotse",
+    Insurance: "Insurance",
+    Maintenance: "Maintenance",
+    Utilities: "Utilities",
+    Groceries: "Grocery",
+    Childcare: "Childcare",
+    Transportation: "Transportasyon",
+    "Savings balance": "Savings",
+    Fits: "Kaya",
+    Tight: "Medyo sagad",
+    Risky: "Delikado",
+    "Not ready": "Hindi pa ready",
+    "Actual monthly picture": "Totoong buwanang picture",
+    "Money in": "Papasok na pera",
+    "Money out": "Lalabas na pera",
+    "Your life snapshot": "Snapshot ng buhay mo",
+    "Monthly money in": "Buwanang pasok",
+    "Monthly money out": "Buwanang gastos",
+    "New home cost": "Bagong gastos sa bahay",
+    "What's left each month": "Matitira bawat buwan",
+    "Car cost": "Gastos sa kotse",
+    "Loan build": "Detalye ng loan",
+    "Cash flow impact": "Epekto sa buwanang pera",
+    "Savings impact": "Epekto sa savings",
+  },
+  vi: {
+    "Life move studio": "Công cụ lập kế hoạch cuộc sống",
+    "What happens to your life if you do this?": "Cuộc sống của bạn sẽ thay đổi thế nào nếu làm điều này?",
+    Language: "Ngôn ngữ",
+    "Life snapshot": "Ảnh chụp tài chính",
+    "Real life": "Cuộc sống hiện tại",
+    "Buy a home": "Mua nhà",
+    "Rent / move": "Thuê / chuyển nhà",
+    "Buy a car": "Mua xe",
+    "Baby / child": "Em bé / con",
+    "Home & loan": "Nhà và khoản vay",
+    "Upfront costs": "Chi phí ban đầu",
+    "Monthly home costs": "Chi phí nhà hằng tháng",
+    "Car scenario": "Kịch bản mua xe",
+    "After you buy": "Sau khi mua",
+    Timeline: "Dòng thời gian",
+    "Stress test": "Kiểm tra áp lực",
+    "Reverse plan": "Lập kế hoạch ngược",
+    "Room for another move?": "Còn chỗ cho kế hoạch khác không?",
+    "Home price": "Giá nhà",
+    "Down payment": "Tiền trả trước",
+    "Loan term": "Thời hạn vay",
+    "Interest rate": "Lãi suất",
+    "Car price": "Giá xe",
+    Insurance: "Bảo hiểm",
+    Maintenance: "Bảo trì",
+    Utilities: "Tiện ích",
+    Groceries: "Thực phẩm",
+    Childcare: "Chăm sóc trẻ",
+    Transportation: "Đi lại",
+    "Savings balance": "Tiền tiết kiệm",
+    Fits: "Phù hợp",
+    Tight: "Hơi căng",
+    Risky: "Rủi ro",
+    "Not ready": "Chưa sẵn sàng",
+    "Actual monthly picture": "Bức tranh hằng tháng hiện tại",
+    "Money in": "Tiền vào",
+    "Money out": "Tiền ra",
+    "Your life snapshot": "Ảnh chụp cuộc sống của bạn",
+    "Monthly money in": "Tiền vào hằng tháng",
+    "Monthly money out": "Tiền ra hằng tháng",
+    "New home cost": "Chi phí nhà mới",
+    "What's left each month": "Còn lại mỗi tháng",
+    "Car cost": "Chi phí xe",
+    "Loan build": "Cấu trúc khoản vay",
+    "Cash flow impact": "Tác động dòng tiền",
+    "Savings impact": "Tác động tiết kiệm",
+  },
+};
+
+const LanguageContext = React.createContext("en");
+
+function tr(text, lang) {
+  if (text == null || typeof text !== "string") return text;
+  return TRANSLATIONS[lang]?.[text] || text;
+}
+
+function T({ children }) {
+  const lang = useContext(LanguageContext);
+  return tr(children, lang);
+}
 
 const DEFAULT_APP_STATE = {
   life: {
@@ -150,6 +456,7 @@ const DEFAULT_APP_STATE = {
     car: false,
     child: false,
   },
+  language: "en",
   committed: [],
 };
 
@@ -184,6 +491,27 @@ const GLOSSARY = {
   "parental leave": "Time away from work after having or adopting a child. It may be paid, partially paid, or unpaid.",
   "medical out-of-pocket": "Health costs you pay yourself, even when you have insurance.",
   adoption: "The legal process of becoming a child's parent. It can include agency, legal, travel, and court costs.",
+  "life move studio": "The whole workspace for testing big financial decisions before they become real.",
+  "home & loan": "The purchase price, down payment, interest rate, and loan length used to estimate the mortgage payment.",
+  "upfront costs": "Cash needed before or at the start of the decision.",
+  "monthly home costs": "Recurring home costs after purchase, including taxes, insurance, HOA, and utilities.",
+  "real life / actual expenses": "Your current baseline. Every scenario should be measured against this first.",
+  "car scenario": "A what-if car purchase using loan terms, insurance, fuel, and maintenance.",
+  "rent / move scenario": "A what-if move that compares new housing costs and moving cash against your current life.",
+  "baby / child scenario": "A what-if family plan for birth or adoption, including monthly and upfront costs.",
+  "choose life moves to check": "Controls which scenarios appear in the app.",
+  "stack moves together": "Combines multiple scenarios to see if several big choices fit at the same time.",
+  "connected plans": "Scenario cards that all read from the same saved life snapshot.",
+  "committed moves": "Real decisions already applied to your saved snapshot.",
+  "room for another move?": "Checks whether the house still leaves room for another major purchase or family change.",
+  "income — earner 1": "Monthly take-home income for the first earner.",
+  "income — earner 2": "Monthly take-home income for the second earner.",
+  utilities: "Monthly electricity, gas, water, trash, and similar home services.",
+  groceries: "Normal monthly food and household basics.",
+  transportation: "Gas, transit, parking, tolls, and everyday travel costs.",
+  "debt payments": "Required monthly payments on credit cards, personal loans, student loans, or similar debt.",
+  "savings balance": "Cash savings available today before making this decision.",
+  "cushion to keep": "The emergency savings floor you do not want a decision to dip below.",
 };
 
 function mergeDefaults(base, saved) {
@@ -224,21 +552,24 @@ function usePersistentState(key, fallback) {
 /*  small UI atoms                                                    */
 /* ------------------------------------------------------------------ */
 function Term({ term, children }) {
+  const lang = useContext(LanguageContext);
   const body = GLOSSARY[String(term || children).toLowerCase()];
   if (!body) return children;
   return (
-    <span className="haf-term" title={body}>
+    <span className="haf-term" tabIndex={0}>
       {children}
+      <span className="haf-bubble" role="tooltip">{tr(body, lang)}</span>
     </span>
   );
 }
 
 function Field({ label, hint, prefix, suffix, value, onChange, step, term }) {
+  const lang = useContext(LanguageContext);
   return (
     <label className="haf-field">
       <span className="haf-field-label">
-        <Term term={term || label}>{label}</Term>
-        {hint && <span className="haf-field-hint">{hint}</span>}
+        <Term term={term || label}>{tr(label, lang)}</Term>
+        {hint && <span className="haf-field-hint">{tr(hint, lang)}</span>}
       </span>
       <span className="haf-input">
         {prefix && <span className="haf-affix">{prefix}</span>}
@@ -254,11 +585,12 @@ function Field({ label, hint, prefix, suffix, value, onChange, step, term }) {
 }
 
 function Group({ icon: Icon, title, open, onToggle, children }) {
+  const lang = useContext(LanguageContext);
   return (
     <section className={`haf-group ${open ? "is-open" : ""}`}>
       <button className="haf-group-head" onClick={onToggle} aria-expanded={open}>
         <span className="haf-group-title">
-          <Icon size={16} strokeWidth={2.1} /> {title}
+          <Icon size={16} strokeWidth={2.1} /> <Term term={title}>{tr(title, lang)}</Term>
         </span>
         <ChevronDown size={17} className="haf-chev" />
       </button>
@@ -268,6 +600,7 @@ function Group({ icon: Icon, title, open, onToggle, children }) {
 }
 
 function Badge({ tone, children }) {
+  const lang = useContext(LanguageContext);
   const map = {
     ok: { bg: "#E7F2EB", fg: C.emerald },
     warn: { bg: "#FBF1DE", fg: "#A86F12" },
@@ -277,7 +610,7 @@ function Badge({ tone, children }) {
   const s = map[tone] || map.neutral;
   return (
     <span className="haf-badge" style={{ background: s.bg, color: s.fg }}>
-      {children}
+      {typeof children === "string" ? tr(children, lang) : children}
     </span>
   );
 }
@@ -335,6 +668,7 @@ export default function App() {
   const childPlan = saved.child;
   const enabledMoves = saved.enabledMoves;
   const stackMoves = saved.stackMoves;
+  const language = saved.language || "en";
 
   const setLifeField = (key) => (value) =>
     setSaved((s) => ({ ...s, life: { ...s.life, [key]: value } }));
@@ -357,6 +691,8 @@ export default function App() {
       ...s,
       stackMoves: { ...s.stackMoves, [key]: checked },
     }));
+  const setLanguage = (value) =>
+    setSaved((s) => ({ ...s, language: value }));
 
   /* --- mortgage --- */
   const { homePrice, downMode, downPct, term, rate, pmiRate } = homePlan;
@@ -732,17 +1068,29 @@ export default function App() {
 
   /* ---------------------------------------------------------------- */
   return (
+    <LanguageContext.Provider value={language}>
     <div className="haf">
       <style>{CSS}</style>
       <div className="haf-wrap">
         {/* header */}
         <header className="haf-head">
-          <div className="haf-eyebrow">Life move studio</div>
-          <h1 className="haf-title">What happens to your life if you do this?</h1>
-          <p className="haf-lede">
-            Save one life snapshot, test big decisions as scenarios, then commit
-            the moves that become real so every other plan sees the new picture.
-          </p>
+          <div className="haf-head-top">
+            <div>
+              <div className="haf-eyebrow">{tr("Life move studio", language)}</div>
+              <h1 className="haf-title">{tr("What happens to your life if you do this?", language)}</h1>
+              <p className="haf-lede">
+                {tr("Save one life snapshot, test big decisions as scenarios, then commit the moves that become real so every other plan sees the new picture.", language)}
+              </p>
+            </div>
+            <label className="haf-language">
+              <span>{tr("Language", language)}</span>
+              <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+                {LANGUAGES.map((option) => (
+                  <option key={option.code} value={option.code}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+          </div>
         </header>
 
         <div className="haf-module-tabs">
@@ -755,7 +1103,7 @@ export default function App() {
             ["child", "Baby / child", Baby],
           ].filter(([k]) => k === "snapshot" || k === "real" || enabledMoves[k]).map(([k, label, Icon]) => (
             <button key={k} className={`haf-module-tab ${module === k ? "on" : ""}`} onClick={() => setModule(k)}>
-              <Icon size={16} strokeWidth={2.1} /> {label}
+              <Icon size={16} strokeWidth={2.1} /> {tr(label, language)}
             </button>
           ))}
         </div>
@@ -943,7 +1291,7 @@ export default function App() {
                 ["reverse", "Reverse plan", Calculator],
               ].map(([k, label, Icon]) => (
                 <button key={k} className={`haf-tab ${tab === k ? "on" : ""}`} onClick={() => setTab(k)}>
-                  <Icon size={15} strokeWidth={2.1} /> {label}
+                  <Icon size={15} strokeWidth={2.1} /> {tr(label, language)}
                 </button>
               ))}
             </div>
@@ -1009,7 +1357,7 @@ export default function App() {
 
                 <div className="haf-rebuild">
                   <div className="haf-rebuild-col">
-                    <h4>New home cost</h4>
+                    <h4><T>New home cost</T></h4>
                     <Row k="Principal & interest" v={m.pi} />
                     <Row k="Property tax" v={m.taxMo} />
                     <Row k="Insurance" v={m.insMo} />
@@ -1019,7 +1367,7 @@ export default function App() {
                     <Row k="Total" v={m.housingMo} total />
                   </div>
                   <div className="haf-rebuild-col">
-                    <h4>What's left each month</h4>
+                    <h4><T>What's left each month</T></h4>
                     <Row k="Household income" v={m.income} />
                     <Row k="− Home (all-in)" v={-m.housingMo} />
                     <Row k="− Childcare" v={-num(childcare)} />
@@ -1038,7 +1386,7 @@ export default function App() {
                 <div className="haf-next-room">
                   <div className="haf-panel-head">
                     <div>
-                      <h3><Car size={17} strokeWidth={2.1} /> Room for another move?</h3>
+                      <h3><Car size={17} strokeWidth={2.1} /> <T>Room for another move?</T></h3>
                       <p>After this house, check whether another big plan still fits without breaking the monthly cushion or emergency floor.</p>
                     </div>
                     <Badge tone={homeRoomTone}>{homeRoomLabel}</Badge>
@@ -1346,6 +1694,7 @@ export default function App() {
         </footer>
       </div>
     </div>
+    </LanguageContext.Provider>
   );
 }
 
@@ -1428,20 +1777,20 @@ function RealLifeModule({
           <section className="haf-panel">
             <div className="haf-panel-head">
               <div>
-                <h3>Actual monthly picture</h3>
+                <h3><T>Actual monthly picture</T></h3>
                 <p>This is the saved baseline every life move uses. Change it here first, then test scenarios.</p>
               </div>
               <Badge tone="neutral">Auto-saved</Badge>
             </div>
             <div className="haf-rebuild">
               <div className="haf-rebuild-col">
-                <h4>Money in</h4>
+                <h4><T>Money in</T></h4>
                 <Row k="Earner 1" v={num(life.earner1)} />
                 <Row k="Earner 2" v={num(life.earner2)} />
                 <Row k="Household income" v={m.income} total />
               </div>
               <div className="haf-rebuild-col">
-                <h4>Money out</h4>
+                <h4><T>Money out</T></h4>
                 <Row k="Housing" v={activeHousing} />
                 <Row k="Utilities" v={num(life.utilities)} />
                 <Row k="Internet" v={num(life.internet)} />
@@ -1541,7 +1890,7 @@ function SnapshotDashboard({
         <section className="haf-panel">
           <div className="haf-panel-head">
             <div>
-              <h3>Choose life moves to check</h3>
+              <h3><T>Choose life moves to check</T></h3>
               <p>Turn on only the scenarios you care about right now. Your choices are saved.</p>
             </div>
           </div>
@@ -1563,7 +1912,7 @@ function SnapshotDashboard({
         <section className="haf-panel">
           <div className="haf-panel-head">
             <div>
-              <h3>Stack moves together</h3>
+              <h3><T>Stack moves together</T></h3>
               <p>Mix scenarios to see whether a few big choices can fit at the same time.</p>
             </div>
             <Badge tone={stackTone}>{stackLabel}</Badge>
@@ -1592,14 +1941,14 @@ function SnapshotDashboard({
           {selectedStack.length ? (
             <div className="haf-rebuild">
               <div className="haf-rebuild-col">
-                <h4>Monthly stack</h4>
+                <h4><T>Monthly stack</T></h4>
                 {selectedStack.map((move) => (
                   <Row key={move.key} k={move.label} v={move.monthly} />
                 ))}
                 <Row k="Total monthly impact" v={stackMonthly} total tone={stackTone} />
               </div>
               <div className="haf-rebuild-col">
-                <h4>Cash stack</h4>
+                <h4><T>Cash stack</T></h4>
                 {selectedStack.map((move) => (
                   <Row key={move.key} k={move.label} v={move.upfront} />
                 ))}
@@ -1627,20 +1976,20 @@ function SnapshotDashboard({
         <section className="haf-panel">
           <div className="haf-panel-head">
             <div>
-              <h3>Your life snapshot</h3>
+              <h3><T>Your life snapshot</T></h3>
               <p><Term term="life snapshot">Life snapshot</Term> is the saved baseline every plan reads from.</p>
             </div>
             <Badge tone="neutral">Auto-saved</Badge>
           </div>
           <div className="haf-rebuild">
             <div className="haf-rebuild-col">
-              <h4>Monthly money in</h4>
+              <h4><T>Monthly money in</T></h4>
               <Row k="Earner 1" v={num(life.earner1)} />
               <Row k="Earner 2" v={num(life.earner2)} />
               <Row k="Household income" v={m.income} total />
             </div>
             <div className="haf-rebuild-col">
-              <h4>Monthly money out</h4>
+              <h4><T>Monthly money out</T></h4>
               <Row k="Housing" v={activeHousing} />
               <Row k="Utilities" v={num(life.utilities)} />
               <Row k="Internet" v={num(life.internet)} />
@@ -1664,7 +2013,7 @@ function SnapshotDashboard({
         <section className="haf-panel">
           <div className="haf-panel-head">
             <div>
-              <h3>Connected plans</h3>
+              <h3><T>Connected plans</T></h3>
               <p>These scenarios use your saved snapshot, so one real move changes the next one.</p>
             </div>
           </div>
@@ -1684,7 +2033,7 @@ function SnapshotDashboard({
         <section className="haf-panel">
           <div className="haf-panel-head">
             <div>
-              <h3>Committed moves</h3>
+              <h3><T>Committed moves</T></h3>
               <p><Term term="committed">Committed</Term> moves are real changes already applied to your snapshot.</p>
             </div>
           </div>
@@ -1860,7 +2209,7 @@ function CarModule({
             </div>
             <div className="haf-rebuild">
               <div className="haf-rebuild-col">
-                <h4>Car cost</h4>
+                <h4><T>Car cost</T></h4>
                 <Row k="Loan payment" v={loanPayment} />
                 <Row k="Insurance" v={num(plan.insurance)} />
                 <Row k="Gas / charging" v={num(plan.fuel)} />
@@ -1868,7 +2217,7 @@ function CarModule({
                 <Row k="Total" v={monthly} total />
               </div>
               <div className="haf-rebuild-col">
-                <h4>Loan build</h4>
+                <h4><T>Loan build</T></h4>
                 <Row k="Car price" v={num(plan.price)} />
                 <Row k="Sales tax" v={tax} />
                 <Row k="Title / dealer fees" v={num(plan.fees)} />
@@ -1877,13 +2226,13 @@ function CarModule({
                 <Row k="Amount financed" v={amountFinanced} total />
               </div>
               <div className="haf-rebuild-col">
-                <h4>Cash flow impact</h4>
+                <h4><T>Cash flow impact</T></h4>
                 <Row k="Current cushion" v={baseMonthlyCushion} />
                 <Row k="Car monthly cost" v={-monthly} />
                 <Row k="Cushion after car" v={cushionAfter} total tone={tone} />
               </div>
               <div className="haf-rebuild-col">
-                <h4>Savings impact</h4>
+                <h4><T>Savings impact</T></h4>
                 <Row k="Savings today" v={savings} />
                 <Row k="Down payment" v={-num(plan.downPayment)} />
                 <Row k="Savings after car" v={savingsAfter} />
@@ -1958,7 +2307,7 @@ function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, sav
             </div>
             <div className="haf-rebuild">
               <div className="haf-rebuild-col">
-                <h4>Monthly child costs</h4>
+                <h4><T>Monthly child costs</T></h4>
                 <Row k="Childcare" v={num(plan.childcare)} />
                 <Row k="Health insurance" v={num(plan.healthInsurance)} />
                 <Row k="Supplies" v={num(plan.supplies)} />
@@ -1968,7 +2317,7 @@ function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, sav
                 <Row k="Total" v={monthly} total />
               </div>
               <div className="haf-rebuild-col">
-                <h4>One-time / early costs</h4>
+                <h4><T>One-time / early costs</T></h4>
                 <Row k={plan.path === "adoption" ? "Adoption costs" : "Medical out-of-pocket"} v={num(plan.medicalOrAdoption)} />
                 <Row k="Nursery / gear" v={num(plan.nurseryGear)} />
                 <Row k="Leave income gap" v={num(plan.leaveIncomeLoss)} />
@@ -1996,10 +2345,11 @@ function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, sav
 }
 
 function PlanCard({ icon: Icon, title, value, sub, tone, onOpen }) {
+  const lang = useContext(LanguageContext);
   return (
     <button className="haf-plan-card" onClick={onOpen}>
       <Icon size={17} strokeWidth={2.1} />
-      <div><b>{title}</b><span>{sub}</span></div>
+      <div><b>{tr(title, lang)}</b><span>{typeof sub === "string" ? tr(sub, lang) : sub}</span></div>
       <Badge tone={tone}>{value}</Badge>
     </button>
   );
@@ -2010,7 +2360,7 @@ function GlossaryPanel() {
     <section className="haf-panel">
       <div className="haf-panel-head">
         <div>
-          <h3><BookOpen size={17} strokeWidth={2.1} /> Glossary</h3>
+          <h3><BookOpen size={17} strokeWidth={2.1} /> <T>Glossary</T></h3>
           <p>Plain-language definitions for terms people may not know yet.</p>
         </div>
       </div>
@@ -2027,30 +2377,33 @@ function GlossaryPanel() {
 }
 
 function Vital({ icon: Icon, label, value, sub }) {
+  const lang = useContext(LanguageContext);
   return (
     <div className="haf-vital">
       <div className="haf-vital-top">
         <Icon size={15} strokeWidth={2.1} />
-        <span>{label}</span>
+        <span>{tr(label, lang)}</span>
       </div>
       <div className="haf-vital-v">{value}</div>
-      <div className="haf-vital-sub">{sub}</div>
+      <div className="haf-vital-sub">{typeof sub === "string" ? tr(sub, lang) : sub}</div>
     </div>
   );
 }
 function Row({ k, v, total, warn, tone }) {
+  const lang = useContext(LanguageContext);
   const color = tone === "bad" ? C.coral : tone === "warn" ? C.amber : tone === "ok" ? C.emerald : undefined;
   return (
     <div className={`haf-row ${total ? "is-total" : ""}`}>
-      <span className={warn ? "haf-row-warn" : ""}>{k}</span>
+      <span className={warn ? "haf-row-warn" : ""}>{tr(k, lang)}</span>
       <b style={color ? { color } : undefined}>{v < 0 ? "−" : ""}{usd0(Math.abs(v))}</b>
     </div>
   );
 }
 function Mini({ k, v, accent }) {
+  const lang = useContext(LanguageContext);
   return (
     <div className={`haf-mini ${accent ? "is-accent" : ""}`}>
-      <span>{k}</span><b>{v}</b>
+      <span>{tr(k, lang)}</span><b>{v}</b>
     </div>
   );
 }
@@ -2101,10 +2454,16 @@ const CSS = `
 .haf-wrap{max-width:1180px;margin:0 auto;padding:30px 22px 48px;}
 
 /* header */
+.haf-head-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;}
 .haf-eyebrow{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:${C.teal};}
 .haf-title{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(28px,4.4vw,44px);
   line-height:1.04;margin:8px 0 0;letter-spacing:-.01em;}
 .haf-lede{max-width:62ch;color:var(--soft);font-size:15px;margin:12px 0 0;}
+.haf-language{display:flex;align-items:flex-start;gap:7px;flex-direction:column;background:${C.paper};
+  border:1px solid var(--line);border-radius:12px;padding:10px 11px;min-width:152px;}
+.haf-language span{font-size:11.5px;font-weight:650;color:${C.teal};text-transform:uppercase;letter-spacing:.08em;}
+.haf-language select{width:100%;border:0;background:#F7F9F7;border-radius:8px;padding:8px 9px;
+  font:inherit;font-size:13px;font-weight:650;color:var(--ink);outline:none;cursor:pointer;}
 
 .haf-module-tabs{display:flex;gap:8px;margin:24px 0 20px;overflow-x:auto;padding-bottom:2px;}
 .haf-module-tab{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);
@@ -2128,7 +2487,7 @@ const CSS = `
 
 /* input groups */
 .haf-inputs{display:flex;flex-direction:column;gap:12px;position:sticky;top:14px;}
-.haf-group{background:${C.paper};border:1px solid var(--line);border-radius:15px;overflow:hidden;}
+.haf-group{background:${C.paper};border:1px solid var(--line);border-radius:15px;overflow:visible;}
 .haf-group-head{width:100%;display:flex;align-items:center;justify-content:space-between;
   background:none;border:0;cursor:pointer;padding:14px 16px;font:inherit;color:var(--ink);}
 .haf-group-title{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;}
@@ -2141,7 +2500,15 @@ const CSS = `
 .haf-field-label{font-size:12.5px;font-weight:500;color:var(--soft);display:flex;align-items:center;
   justify-content:space-between;gap:8px;min-width:0;}
 .haf-field-hint{color:#9AA8A6;font-weight:400;font-size:11.5px;}
-.haf-term{border-bottom:1px dotted #9AA8A6;cursor:help;text-underline-offset:3px;}
+.haf-term{border-bottom:1px dotted #9AA8A6;cursor:help;text-underline-offset:3px;position:relative;
+  display:inline-flex;align-items:center;min-width:0;}
+.haf-bubble{position:absolute;left:0;bottom:calc(100% + 8px);z-index:30;width:max-content;max-width:min(280px,80vw);
+  background:${C.ink};color:#fff;border-radius:10px;padding:9px 11px;font-size:12px;font-weight:500;
+  line-height:1.4;box-shadow:0 10px 28px rgba(20,40,40,.22);opacity:0;pointer-events:none;
+  transform:translateY(4px);transition:opacity .15s ease,transform .15s ease;text-align:left;text-transform:none;
+  letter-spacing:0;}
+.haf-bubble::after{content:"";position:absolute;left:14px;top:100%;border:6px solid transparent;border-top-color:${C.ink};}
+.haf-term:hover .haf-bubble,.haf-term:focus-visible .haf-bubble{opacity:1;transform:translateY(0);}
 .haf-input{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;
   background:#FBFCFB;overflow:hidden;transition:border-color .15s,box-shadow .15s;}
 .haf-input:focus-within{border-color:${C.teal};box-shadow:0 0 0 3px ${C.tealSoft};}
@@ -2317,6 +2684,8 @@ const CSS = `
 }
 @media (max-width:620px){
   .haf-wrap{padding:22px 14px 40px;}
+  .haf-head-top{flex-direction:column;}
+  .haf-language{width:100%;}
   .haf-vitals{grid-template-columns:1fr 1fr;gap:10px;}
   .haf-vital-v{font-size:22px;}
   .haf-rebuild{grid-template-columns:1fr;gap:18px;}
