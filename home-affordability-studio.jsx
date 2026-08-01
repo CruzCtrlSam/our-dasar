@@ -364,9 +364,359 @@ const TRANSLATIONS = {
 
 const LanguageContext = React.createContext("en");
 
+const EXTRA_TRANSLATIONS = {
+  es: {
+    "Life snapshot": "Resumen de vida",
+    "Your life snapshot": "Tu resumen de vida",
+    "Save one life snapshot, test big decisions as scenarios, then commit the moves that become real so every other plan sees the new picture.": "Guarda un resumen de tu vida financiera, prueba decisiones grandes como escenarios y confirma las que se vuelvan reales para que todos los demás planes usen la nueva realidad.",
+    "Monthly cushion": "Margen mensual",
+    "Current commitments": "Compromisos actuales",
+    "Emergency runway": "Tiempo de respaldo",
+    "Housing status": "Situación de vivienda",
+    Renting: "Rentando",
+    Owned: "Propia",
+    Strong: "Fuerte",
+    Healthy: "Saludable",
+    "Very tight": "Muy ajustado",
+    "Over budget": "Fuera de presupuesto",
+    "Pick moves": "Elige decisiones",
+    "Fits together": "Caben juntas",
+    "Tight together": "Ajustado en conjunto",
+    "Too much together": "Demasiado junto",
+    "Monthly impact": "Impacto mensual",
+    "Upfront cash": "Efectivo inicial",
+    "Cushion after": "Margen después",
+    "Savings after": "Ahorros después",
+    "Emergency floor": "Piso de emergencia",
+    "Moves selected": "Decisiones elegidas",
+    "Turn on only the scenarios you care about right now. Your choices are saved.": "Activa solo los escenarios que quieres revisar ahora. Tus elecciones se guardan.",
+    "Mix scenarios to see whether a few big choices can fit at the same time.": "Combina escenarios para ver si varias decisiones grandes caben al mismo tiempo.",
+    "Choose two or more moves above when you want to test real-life temptation stacking.": "Elige dos o más decisiones arriba cuando quieras probar varias tentaciones de la vida real juntas.",
+    "Life snapshot is the saved baseline every plan reads from.": "El resumen de vida es la base guardada que todos los planes usan.",
+    "These scenarios use your saved snapshot, so one real move changes the next one.": "Estos escenarios usan tu resumen guardado, así que una decisión real cambia la siguiente.",
+    "No committed moves yet. Use a module as a scenario, then add it to your life when it becomes real.": "Todavía no hay decisiones confirmadas. Usa un módulo como escenario y agrégalo a tu vida cuando se vuelva real.",
+    "Committed moves are real changes already applied to your snapshot.": "Las decisiones confirmadas son cambios reales que ya se aplicaron a tu resumen.",
+    "Pick at least one life move above to show connected plan cards.": "Elige al menos una decisión arriba para mostrar las tarjetas de planes conectados.",
+    "Actual monthly spending": "Gasto mensual real",
+    "Current housing": "Vivienda actual",
+    "Actual monthly picture": "Panorama mensual real",
+    "This is the saved baseline every life move uses. Change it here first, then test scenarios.": "Esta es la base guardada que usa cada decisión de vida. Cámbiala aquí primero y luego prueba escenarios.",
+    "This is your actual baseline. Life moves should be judged against this, not against numbers hidden inside one scenario.": "Esta es tu base real. Las decisiones de vida deben compararse contra esto, no contra números escondidos dentro de un solo escenario.",
+    "Household income": "Ingreso del hogar",
+    "Earner 1": "Persona 1",
+    "Earner 2": "Persona 2",
+    Housing: "Vivienda",
+    Debt: "Deuda",
+    Fun: "Gustos",
+    "Other subscriptions": "Otras suscripciones",
+    "Monthly money in": "Dinero mensual que entra",
+    "Monthly money out": "Dinero mensual que sale",
+    "Total monthly impact": "Impacto mensual total",
+    "Total upfront cash": "Efectivo inicial total",
+    "Ready now": "Listo ahora",
+    "Not yet": "Aún no",
+    "after purchase": "después de comprar",
+    upfront: "inicial",
+    Open: "Abierto",
+    "housing, bills, debts, lifestyle": "vivienda, cuentas, deudas y estilo de vida",
+    Household: "Hogar",
+    "Mortgage / home cost": "Hipoteca / costo de casa",
+    "Rent today": "Renta actual",
+    Own: "Propia",
+    "Estimated loan payment": "Pago estimado del préstamo",
+    "This move changes monthly life by": "Esta mudanza cambia tu vida mensual en",
+    "This car adds": "Este carro agrega",
+    "Plain-language definitions for terms people may not know yet.": "Definiciones claras para términos que quizás la gente todavía no conoce.",
+    "Auto-saved": "Guardado automático",
+    "Monthly stack": "Impacto mensual combinado",
+    "Cash stack": "Efectivo combinado",
+    "Buying a home and renting/moving are usually alternate housing paths, so compare them separately unless you truly expect both.": "Comprar casa y rentar/mudarte normalmente son caminos alternos de vivienda, así que compáralos por separado a menos que de verdad esperes hacer ambas cosas.",
+    "This combination breaks either monthly cushion or emergency savings. It needs a smaller move, more cash, or more income.": "Esta combinación rompe el margen mensual o los ahorros de emergencia. Necesita una decisión más pequeña, más efectivo o más ingreso.",
+    "This combination can work, but it leaves little room for surprises.": "Esta combinación puede funcionar, pero deja poco espacio para sorpresas.",
+    "This combination keeps monthly cushion and emergency savings intact.": "Esta combinación mantiene intactos el margen mensual y los ahorros de emergencia.",
+    "After this house, check whether another big plan still fits without breaking the monthly cushion or emergency floor.": "Después de esta casa, revisa si otro plan grande todavía cabe sin romper el margen mensual o el piso de emergencia.",
+    "Buy the car scenario": "Comprar el carro del escenario",
+    "Adopt a child": "Adoptar un niño",
+    "Have a baby": "Tener un bebé",
+    "Savings after both": "Ahorros después de ambas decisiones",
+    "Cushion after move": "Margen después de mudarte",
+    "Cushion after car": "Margen después del carro",
+    "Savings after car": "Ahorros después del carro",
+    "Rent / move scenario": "Escenario de renta / mudanza",
+    "Car scenario": "Escenario de carro",
+    "Baby / child scenario": "Escenario de bebé / hijo",
+    "This move changes monthly life by": "Esta mudanza cambia tu vida mensual por",
+    "Path": "Camino",
+    "Monthly child costs": "Costos mensuales del niño",
+    "One-time / early costs": "Costos iniciales / únicos",
+    "This is a planning estimate. Real costs can swing a lot by insurance, family help, leave policy, adoption path, and local childcare prices.": "Esto es una estimación de planeación. Los costos reales pueden cambiar mucho por seguro, ayuda familiar, política de licencia, ruta de adopción y precios locales de cuidado infantil.",
+    "A move should leave enough monthly cushion for surprises after rent, bills, and normal life.": "Una mudanza debe dejar suficiente margen mensual para sorpresas después de renta, cuentas y vida normal.",
+    "The monthly payment works, but the down payment leaves savings below your emergency cushion.": "El pago mensual funciona, pero el enganche deja tus ahorros por debajo de tu colchón de emergencia.",
+    "This can work, but it leaves a thin buffer. A lower price, bigger down payment, or shorter term may make it sturdier.": "Esto puede funcionar, pero deja un margen delgado. Un precio menor, un enganche más grande o un plazo más corto puede hacerlo más sólido.",
+    "This keeps your monthly cushion positive and leaves savings above your emergency floor.": "Esto mantiene positivo tu margen mensual y deja tus ahorros por encima del piso de emergencia.",
+    "This car creates a monthly shortfall. The payment and car costs are more than your current monthly cushion.": "Este carro crea un déficit mensual. El pago y los costos del carro superan tu margen mensual actual.",
+    "Estimated loan payment": "Pago estimado del préstamo",
+    "Payment": "Pago",
+    "Fuel": "Gasolina / carga",
+    "Gas / charging": "Gasolina / carga",
+    "Amount financed": "Monto financiado",
+    "Total interest": "Interés total",
+    "Down payment today": "Enganche hoy",
+    "Savings after down": "Ahorros después del enganche",
+    "Health insurance": "Seguro médico",
+    "Supplies": "Artículos",
+    "Food": "Comida",
+    "Clothing": "Ropa",
+    "College savings": "Ahorro universitario",
+    "Medical / adoption": "Médico / adopción",
+    "Nursery gear": "Equipo del bebé",
+    "Leave income loss": "Ingreso perdido por licencia",
+    "Birth": "Nacimiento",
+    "Adoption": "Adopción",
+    "Monthly home cost": "Costo mensual de casa",
+    "payment, tax, insurance, HOA, utilities": "pago, impuestos, seguro, HOA y servicios",
+    "Cash to buy": "Efectivo para comprar",
+    "Left to save after buying": "Lo que queda para ahorrar después de comprar",
+    "Until you're ready": "Tiempo hasta estar listo",
+    "to cover down payment + cushion": "para cubrir enganche + colchón",
+    "PMI on": "PMI activo",
+    "no PMI": "sin PMI",
+    "of loan / yr, while under 20%": "del préstamo / año, mientras sea menos de 20%",
+    "Your agent commission": "Comisión de tu agente",
+    "your share, if any": "tu parte, si aplica",
+    "of price": "del precio",
+    "Cash to close": "Efectivo para cerrar",
+    "Property tax": "Impuesto predial",
+    "of home value / yr": "del valor de la casa / año",
+    "Homeowners insurance": "Seguro de vivienda",
+    "per year": "por año",
+    "After buying, you'd save": "Después de comprar, ahorrarías",
+    "of income": "del ingreso",
+    today: "hoy",
+    from: "de",
+    around: "aprox.",
+    "Not at this rate": "No a este ritmo",
+    Off: "Apagado",
+    "This budget goes over. The home cost plus current spending is more than your income — something has to give before this works.": "Este presupuesto queda en déficit. El costo de la casa más tus gastos actuales supera tu ingreso; algo tiene que cambiar antes de que funcione.",
+    "Savings drop below a healthy floor. You'd still be positive, but with little room for surprises.": "Los ahorros caen por debajo de un piso saludable. Sigues en positivo, pero con poco espacio para sorpresas.",
+    "Savings stay healthy after the purchase. Run the stress test to see how a rough patch would feel.": "Tus ahorros se mantienen saludables después de comprar. Usa la prueba de estrés para ver cómo se sentiría una mala racha.",
+    "Add this home to my life": "Agregar esta casa a mi vida",
+    "This saves the home as real, subtracts cash to close from savings, and updates your shared snapshot.": "Esto guarda la casa como real, resta el efectivo para cerrar de tus ahorros y actualiza tu resumen compartido.",
+    Now: "Ahora",
+    "After buying": "Después de comprar",
+    "Rent + utilities": "Renta + servicios",
+    "Internet + media": "Internet + entretenimiento",
+    Vehicle: "Vehículo",
+    "Home upkeep": "Mantenimiento de casa",
+    Media: "Entretenimiento",
+    Upkeep: "Mantenimiento",
+    "Principal & interest": "Capital e interés",
+    "Home (all-in)": "Casa (todo incluido)",
+    "For savings": "Para ahorrar",
+    "Monthly room after home": "Margen mensual después de la casa",
+    "Cash after closing": "Efectivo después del cierre",
+    "Cash above floor": "Efectivo sobre el piso",
+    "Adds monthly": "Agrega al mes",
+    "Needs upfront": "Requiere inicial",
+    "Monthly room after both": "Margen mensual después de ambas decisiones",
+    "Turn on another life move from the Life snapshot to compare it against this house.": "Activa otra decisión desde Resumen de vida para compararla contra esta casa.",
+    "This house still leaves enough room for at least one other selected move.": "Esta casa todavía deja espacio suficiente para al menos otra decisión seleccionada.",
+    "There is some room after the house, but the next move would leave a thin buffer.": "Hay algo de espacio después de la casa, pero la siguiente decisión dejaría un margen delgado.",
+    "This house should probably be the only big move for now. Another purchase would break cash flow or dip below the emergency floor.": "Probablemente esta casa debería ser la única decisión grande por ahora. Otra compra rompería el flujo mensual o bajaría del piso de emergencia.",
+    "Time to your target": "Tiempo para llegar a tu meta",
+    months: "meses",
+    "You already have enough to close and keep your cushion.": "Ya tienes suficiente para cerrar y mantener tu colchón.",
+    "On track for around": "Vas en camino para alrededor de",
+    "At this savings rate you won't reach it — free up some monthly cash flow below.": "Con este ritmo de ahorro no llegarías; libera flujo mensual abajo.",
+    Target: "Meta",
+    "Saved so far": "Ahorrado hasta ahora",
+    "Still to go": "Falta por ahorrar",
+    "Cut monthly spending by": "Reducir gastos mensuales por",
+    saving: "ahorrando",
+    "ready now": "listo ahora",
+    never: "nunca",
+    target: "meta",
+    Savings: "Ahorros",
+    Cushion: "Colchón",
+    "Lose an income": "Perder un ingreso",
+    "Costs rise": "Suben los costos",
+    "Which income pauses?": "¿Qué ingreso se pausa?",
+    For: "Durante",
+    "Interest rate up": "Sube la tasa de interés",
+    "Insurance up": "Sube el seguro",
+    "Your cushion lasts": "Tu colchón dura",
+    "Holds up": "Resiste",
+    "Runs dry": "Se agota",
+    "Even with higher costs you stay cash-flow positive, so the cushion isn't drained.": "Incluso con costos más altos sigues con flujo positivo, así que el colchón no se agota.",
+    "Higher costs flip you to a monthly shortfall — the cushion drains in about months.": "Los costos más altos te dejan en déficit mensual; el colchón se agota en aproximadamente esos meses.",
+    "This emergency cushion survives the lost-income period with room left.": "Este colchón de emergencia aguanta el periodo sin ese ingreso y todavía deja margen.",
+    "The cushion runs out before the income gap ends. A bigger cushion or lower payment closes it.": "El colchón se agota antes de que termine la pausa de ingreso. Un colchón más grande o un pago menor cerraría la brecha.",
+    "You are already saving more than this target needs. You could hit it sooner or aim for a larger down payment.": "Ya estás ahorrando más de lo que requiere esta meta. Podrías llegar antes o apuntar a un enganche más grande.",
+    "You are short of this target. Free up cash flow, stretch the timeline, or lower the down payment.": "Te falta para esta meta. Libera flujo mensual, alarga el plazo o baja el enganche.",
+    "No committed moves yet. Use a module as a scenario, then add it to your life when it becomes real.": "Todavía no hay decisiones confirmadas. Usa un módulo como escenario y agrégalo a tu vida cuando se vuelva real.",
+    "Estimates for planning, not a loan offer. Taxes, insurance, and PMI vary by lender and location — confirm real quotes before you commit.": "Estimaciones para planear, no una oferta de préstamo. Impuestos, seguro y PMI cambian por prestamista y ubicación; confirma cotizaciones reales antes de comprometerte.",
+    "Work backward: pick a timeline and a down payment, and see the monthly savings it takes to get there on this home.": "Trabaja hacia atrás: elige una fecha y un enganche, y revisa cuánto tendrías que ahorrar al mes para llegar a esta casa.",
+    "Buy in": "Comprar en",
+    year: "año",
+    years: "años",
+    "With down": "Con enganche de",
+    "You'd need to save": "Tendrías que ahorrar",
+    "Need to save": "Necesitas ahorrar",
+    "Saving now": "Ahorras ahora",
+    "Current housing + utilities": "Vivienda actual + servicios",
+    "New rent": "Nueva renta",
+    "Roommate share": "Aporte de roommate",
+    "New utilities": "Nuevos servicios",
+    "Security deposit": "Depósito de seguridad",
+    "Moving costs": "Costos de mudanza",
+    "Furniture / setup": "Muebles / instalación",
+    "New rent after split": "Nueva renta después de dividir",
+    "New monthly housing": "Nueva vivienda mensual",
+    "Upfront cost": "Costo inicial",
+    "Cash due today": "Efectivo requerido hoy",
+    "Loan interest": "Interés del préstamo",
+    "Current savings": "Ahorros actuales",
+    "Loan payment": "Pago del préstamo",
+    "Car monthly cost": "Costo mensual del carro",
+    "Savings today": "Ahorros hoy",
+    "Emergency cushion to keep": "Colchón de emergencia a mantener",
+    "Below cushion by": "Debajo del colchón por",
+    "Above cushion by": "Sobre el colchón por",
+    "Adopting a child": "Adoptar un niño",
+    "Having a baby": "Tener un bebé",
+    "adds about": "agrega aproximadamente",
+    "Diapers / supplies": "Pañales / artículos",
+    "Food / formula": "Comida / fórmula",
+    "Clothing / extras": "Ropa / extras",
+    "Adoption costs": "Costos de adopción",
+    "Medical out-of-pocket": "Gastos médicos de bolsillo",
+    "Nursery / gear": "Cuarto / equipo del bebé",
+    "Leave income gap": "Ingreso perdido por licencia",
+    "Upfront total": "Total inicial",
+    "Add this child plan to my life": "Agregar este plan de niño a mi vida",
+    "This adds childcare and child-related groceries/supplies to your saved snapshot, then subtracts upfront from savings.": "Esto agrega cuidado infantil y comida/artículos del niño a tu resumen guardado, y luego resta el costo inicial de tus ahorros.",
+  },
+  fr: {
+    "Monthly cushion": "Marge mensuelle",
+    "Current commitments": "Engagements actuels",
+    "Emergency runway": "Marge de sécurité",
+    "Housing status": "Situation logement",
+    Renting: "Location",
+    Owned: "Propriétaire",
+    Strong: "Solide",
+    Healthy: "Sain",
+    "Very tight": "Très serré",
+    "Over budget": "Hors budget",
+    "Pick moves": "Choisir",
+    "Monthly impact": "Impact mensuel",
+    "Upfront cash": "Cash au départ",
+    "Cushion after": "Marge après",
+    "Savings after": "Épargne après",
+    "Emergency floor": "Réserve minimum",
+    "Moves selected": "Choix sélectionnés",
+    "Turn on only the scenarios you care about right now. Your choices are saved.": "Active seulement les scénarios qui comptent maintenant. Tes choix sont enregistrés.",
+    "Mix scenarios to see whether a few big choices can fit at the same time.": "Combine les scénarios pour voir si plusieurs grands choix peuvent passer en même temps.",
+    "Life snapshot is the saved baseline every plan reads from.": "Le portrait de vie est la base enregistrée que chaque plan utilise.",
+    "These scenarios use your saved snapshot, so one real move changes the next one.": "Ces scénarios utilisent ton portrait enregistré, donc un vrai changement modifie le suivant.",
+    "Auto-saved": "Enregistré auto",
+  },
+  zh: {
+    "Monthly cushion": "每月余量",
+    "Current commitments": "当前固定支出",
+    "Emergency runway": "应急支撑时间",
+    "Housing status": "住房状态",
+    Renting: "租房中",
+    Owned: "已拥有",
+    Strong: "很稳",
+    Healthy: "健康",
+    "Pick moves": "选择项目",
+    "Monthly impact": "每月影响",
+    "Upfront cash": "前期现金",
+    "Cushion after": "之后余量",
+    "Savings after": "之后储蓄",
+    "Emergency floor": "应急底线",
+    "Moves selected": "已选项目",
+    "Auto-saved": "已自动保存",
+  },
+  fil: {
+    "Monthly cushion": "Buwanang natitira",
+    "Current commitments": "Kasalukuyang obligasyon",
+    "Emergency runway": "Emergency runway",
+    "Housing status": "Status ng tirahan",
+    Renting: "Umuupa",
+    Owned: "May-ari",
+    Strong: "Malakas",
+    Healthy: "Maayos",
+    "Pick moves": "Pumili",
+    "Monthly impact": "Buwanang epekto",
+    "Upfront cash": "Paunang cash",
+    "Cushion after": "Matitira pagkatapos",
+    "Savings after": "Savings pagkatapos",
+    "Emergency floor": "Emergency minimum",
+    "Moves selected": "Napili",
+    "Auto-saved": "Auto-save",
+  },
+  vi: {
+    "Monthly cushion": "Khoản dư hằng tháng",
+    "Current commitments": "Cam kết hiện tại",
+    "Emergency runway": "Thời gian dự phòng",
+    "Housing status": "Tình trạng nhà ở",
+    Renting: "Đang thuê",
+    Owned: "Sở hữu",
+    Strong: "Vững",
+    Healthy: "Ổn",
+    "Pick moves": "Chọn kế hoạch",
+    "Monthly impact": "Tác động hằng tháng",
+    "Upfront cash": "Tiền ban đầu",
+    "Cushion after": "Dư sau đó",
+    "Savings after": "Tiết kiệm sau đó",
+    "Emergency floor": "Mức dự phòng tối thiểu",
+    "Moves selected": "Đã chọn",
+    "Auto-saved": "Tự động lưu",
+  },
+};
+
 function tr(text, lang) {
   if (text == null || typeof text !== "string") return text;
-  return TRANSLATIONS[lang]?.[text] || text;
+  const table = { ...(TRANSLATIONS[lang] || {}), ...(EXTRA_TRANSLATIONS[lang] || {}) };
+  if (table[text]) return table[text];
+  if (lang === "es") {
+    let m = text.match(/^(.+) housing \+ bills$/);
+    if (m) return `${m[1]} vivienda + cuentas`;
+    m = text.match(/^(.+) saved$/);
+    if (m) return `${m[1]} ahorrados`;
+    m = text.match(/^(.+)\/mo rent$/);
+    if (m) return `${m[1]}/mes de renta`;
+    m = text.match(/^(.+)\/mo committed$/);
+    if (m) return `${m[1]}/mes comprometidos`;
+    m = text.match(/^Leaves (.+)\/mo cushion$/);
+    if (m) return `Deja ${m[1]}/mes de margen`;
+    m = text.match(/^Leaves (.+)\/mo after your current life snapshot\.$/);
+    if (m) return `Deja ${m[1]}/mes después de tu resumen actual.`;
+    m = text.match(/^Leaves (.+)\/mo monthly cushion and (.+) saved after down payment\.$/);
+    if (m) return `Deja ${m[1]}/mes de margen y ${m[2]} ahorrados después del enganche.`;
+    m = text.match(/^Leaves (.+)\/mo monthly cushion and (.+) saved after upfront costs\.$/);
+    if (m) return `Deja ${m[1]}/mes de margen y ${m[2]} ahorrados después de los costos iniciales.`;
+    m = text.match(/^(.+)\/mo after purchase$/);
+    if (m) return `${m[1]}/mes después de comprar`;
+    m = text.match(/^(.+) upfront or leave impact$/);
+    if (m) return `${m[1]} iniciales o impacto por licencia`;
+    m = text.match(/^(.+) upfront$/);
+    if (m) return `${m[1]} iniciales`;
+    m = text.match(/^(.+) mo$/);
+    if (m) return `${m[1]} meses`;
+    m = text.match(/^(.+)\/mo$/);
+    if (m) return `${m[1]}/mes`;
+    m = text.match(/^(.+) cash$/);
+    if (m) return `${m[1]} en efectivo`;
+    m = text.match(/^around (.+)$/);
+    if (m) return `aprox. ${m[1]}`;
+    m = text.match(/^− (.+)$/);
+    if (m) return `− ${tr(m[1], lang)}`;
+    m = text.match(/^= (.+)$/);
+    if (m) return `= ${tr(m[1], lang)}`;
+  }
+  return text;
 }
 
 function T({ children }) {
@@ -617,12 +967,13 @@ function Badge({ tone, children }) {
 
 /* income-as-100% living budget bar — the signature element */
 function BudgetBar({ caption, segments, income, scaleToSpend }) {
+  const lang = useContext(LanguageContext);
   const denom = scaleToSpend
     ? segments.reduce((a, s) => a + s.value, 0)
     : income;
   return (
     <div className="haf-bbar-row">
-      <div className="haf-bbar-cap">{caption}</div>
+      <div className="haf-bbar-cap">{tr(caption, lang)}</div>
       <div className="haf-bbar-track">
         {segments.map((s, i) => {
           const w = denom > 0 ? (s.value / denom) * 100 : 0;
@@ -632,7 +983,7 @@ function BudgetBar({ caption, segments, income, scaleToSpend }) {
               key={i}
               className="haf-bbar-seg"
               style={{ width: `${w}%`, background: s.color }}
-              title={`${s.label}: ${usd0(s.value)}`}
+              title={`${tr(s.label, lang)}: ${usd0(s.value)}`}
             />
           );
         })}
@@ -642,13 +993,14 @@ function BudgetBar({ caption, segments, income, scaleToSpend }) {
 }
 
 const CurrencyTip = ({ active, payload, label, suffix }) => {
+  const lang = useContext(LanguageContext);
   if (!active || !payload || !payload.length) return null;
   return (
     <div className="haf-tip">
-      <div className="haf-tip-x">{label}{suffix}</div>
+      <div className="haf-tip-x">{label}{tr(suffix, lang)}</div>
       {payload.map((p, i) => (
         <div key={i} className="haf-tip-row">
-          <span style={{ color: p.color }}>{p.name}</span>
+          <span style={{ color: p.color }}>{tr(p.name, lang)}</span>
           <b>{usd0(p.value)}</b>
         </div>
       ))}
@@ -1204,11 +1556,11 @@ export default function App() {
           <Vital
             icon={PiggyBank} label="Left to save after buying"
             value={usd0(m.savingsPost)}
-            sub={<Badge tone={hPost.tone}>{hPost.label} · {pct(m.ratePost)}</Badge>}
+            sub={<Badge tone={hPost.tone}>{`${tr(hPost.label, language)} · ${pct(m.ratePost)}`}</Badge>}
           />
           <Vital
             icon={Clock} label="Until you're ready"
-            value={ready}
+            value={m.readyNow ? tr("Ready now", language) : isFinite(m.months) ? `${Math.ceil(m.months)} mo` : tr("Not at this rate", language)}
             sub={readyDate ? `around ${readyDate}` : "to cover down payment + cushion"}
           />
         </div>
@@ -1220,7 +1572,7 @@ export default function App() {
               <Field label="Home price" prefix="$" value={homePrice} onChange={setHomePrice} />
               <div className="haf-field">
                 <span className="haf-field-label">
-                  Down payment
+                  {tr("Down payment", language)}
                   <span className="haf-seg haf-seg-mini">
                     <button className={downMode === "pct" ? "on" : ""} onClick={() => setDownMode("pct")}>%</button>
                     <button className={downMode === "dollar" ? "on" : ""} onClick={() => setDownMode("dollar")}>$</button>
@@ -1245,11 +1597,11 @@ export default function App() {
                   </span>
                 )}
                 <span className="haf-field-foot">
-                  {usd0(m.dAmt)} · {pct(m.dPct)} of price
+                  {usd0(m.dAmt)} · {pct(m.dPct)} {tr("of price", language)}
                   {m.pmiActive ? (
-                    <Badge tone="warn">PMI on · +{usd0(m.pmiMo)}/mo</Badge>
+                    <Badge tone="warn">{`${tr("PMI on", language)} · +${usd0(m.pmiMo)}/mo`}</Badge>
                   ) : (
-                    <Badge tone="ok">20%+ · no PMI</Badge>
+                    <Badge tone="ok">{`20%+ · ${tr("no PMI", language)}`}</Badge>
                   )}
                 </span>
               </div>
@@ -1265,7 +1617,7 @@ export default function App() {
               <Field label="Your agent commission" hint="your share, if any" suffix="%" value={commissionPct} onChange={setCommissionPct} />
               <Field label="Closing costs" hint="of price" suffix="%" value={closingPct} onChange={setClosingPct} />
               <div className="haf-field-foot haf-foot-sum">
-                Cash to close: <b>{usd0(m.cashToClose)}</b>
+                {tr("Cash to close", language)}: <b>{usd0(m.cashToClose)}</b>
               </div>
             </Group>
 
@@ -1301,13 +1653,13 @@ export default function App() {
               <div className="haf-panel">
                 <div className="haf-verdict">
                   <div>
-                    <div className="haf-verdict-k">After buying, you'd save</div>
+                    <div className="haf-verdict-k">{tr("After buying, you'd save", language)}</div>
                     <div className="haf-verdict-v" style={{ color: hPost.color }}>
                       {usd0(m.savingsPost)}<span>/mo</span>
                     </div>
                     <div className="haf-verdict-sub">
-                      {pct(m.ratePost)} of income{" "}
-                      <span className="haf-arrow">↓ from {pct(m.rateNow)} today</span>
+                      {pct(m.ratePost)} {tr("of income", language)}{" "}
+                      <span className="haf-arrow">↓ {tr("from", language)} {pct(m.rateNow)} {tr("today", language)}</span>
                     </div>
                   </div>
                   <Badge tone={hPost.tone}>{hPost.label}</Badge>
@@ -1315,31 +1667,26 @@ export default function App() {
 
                 {m.overBudget && (
                   <Flag tone="bad" icon={AlertTriangle}>
-                    This budget goes <b>{usd0(Math.abs(m.savingsPost))}/mo over</b>.
-                    The home cost plus current spending is more than your income —
-                    something has to give before this works.
+                    {tr("This budget goes over. The home cost plus current spending is more than your income — something has to give before this works.", language)}
                   </Flag>
                 )}
                 {!m.overBudget && m.ratePost < HEALTHY_FLOOR && (
                   <Flag tone="warn" icon={TrendingDown}>
-                    Savings drop below a {HEALTHY_FLOOR}% healthy floor. You'd still
-                    be positive, but with little room for surprises.
+                    {tr("Savings drop below a healthy floor. You'd still be positive, but with little room for surprises.", language)}
                   </Flag>
                 )}
                 {!m.overBudget && m.ratePost >= HEALTHY_FLOOR && (
                   <Flag tone="ok" icon={CheckCircle2}>
-                    Savings stay healthy after the purchase. Run the stress test to
-                    see how a rough patch would feel.
+                    {tr("Savings stay healthy after the purchase. Run the stress test to see how a rough patch would feel.", language)}
                   </Flag>
                 )}
 
                 <div className="haf-action-row">
                   <button className="haf-primary-action" onClick={commitHome}>
-                    <Save size={16} strokeWidth={2.1} /> Add this home to my life
+                    <Save size={16} strokeWidth={2.1} /> {tr("Add this home to my life", language)}
                   </button>
                   <span>
-                    This saves the home as real, subtracts {usd0(m.cashToClose)} from savings,
-                    and updates your shared snapshot.
+                    {tr("This saves the home as real, subtracts cash to close from savings, and updates your shared snapshot.", language)}
                   </span>
                 </div>
 
@@ -1387,7 +1734,7 @@ export default function App() {
                   <div className="haf-panel-head">
                     <div>
                       <h3><Car size={17} strokeWidth={2.1} /> <T>Room for another move?</T></h3>
-                      <p>After this house, check whether another big plan still fits without breaking the monthly cushion or emergency floor.</p>
+                      <p><T>After this house, check whether another big plan still fits without breaking the monthly cushion or emergency floor.</T></p>
                     </div>
                     <Badge tone={homeRoomTone}>{homeRoomLabel}</Badge>
                   </div>
@@ -1403,7 +1750,7 @@ export default function App() {
                     <div className="haf-rebuild">
                       {roomAfterHomeOptions.map(({ key, label, monthly, upfront, monthlyAfter, cashAfter, tone, icon: Icon }) => (
                         <div className="haf-rebuild-col" key={key}>
-                          <h4><Icon size={13} strokeWidth={2.2} /> {label}</h4>
+                          <h4><Icon size={13} strokeWidth={2.2} /> {tr(label, language)}</h4>
                           <Row k="Adds monthly" v={monthly} />
                           <Row k="Needs upfront" v={upfront} />
                           <Row k="Monthly room after both" v={monthlyAfter} />
@@ -1413,16 +1760,16 @@ export default function App() {
                     </div>
                   ) : (
                     <Flag tone="warn" icon={AlertTriangle}>
-                      Turn on another life move from the Life snapshot to compare it against this house.
+                      <T>Turn on another life move from the Life snapshot to compare it against this house.</T>
                     </Flag>
                   )}
                   {roomAfterHomeOptions.length > 0 && (
                     <Flag tone={homeRoomTone} icon={homeRoomTone === "bad" ? AlertTriangle : homeRoomTone === "warn" ? TrendingDown : CheckCircle2}>
                       {homeRoomTone === "ok"
-                        ? "This house still leaves enough room for at least one other selected move."
+                        ? tr("This house still leaves enough room for at least one other selected move.", language)
                         : homeRoomTone === "warn"
-                        ? "There is some room after the house, but the next move would leave a thin buffer."
-                        : "This house should probably be the only big move for now. Another purchase would break cash flow or dip below the emergency floor."}
+                        ? tr("There is some room after the house, but the next move would leave a thin buffer.", language)
+                        : tr("This house should probably be the only big move for now. Another purchase would break cash flow or dip below the emergency floor.", language)}
                     </Flag>
                   )}
                 </div>
@@ -1434,17 +1781,17 @@ export default function App() {
               <div className="haf-panel">
                 <div className="haf-verdict">
                   <div>
-                    <div className="haf-verdict-k">Time to your target</div>
+                    <div className="haf-verdict-k">{tr("Time to your target", language)}</div>
                     <div className="haf-verdict-v" style={{ color: m.readyNow ? C.emerald : isFinite(m.months) ? C.teal : C.coral }}>
-                      {m.readyNow ? "Ready now" : isFinite(m.months) ? `${Math.ceil(m.months)}` : "—"}
-                      {!m.readyNow && isFinite(m.months) && <span>months</span>}
+                      {m.readyNow ? tr("Ready now", language) : isFinite(m.months) ? `${Math.ceil(m.months)}` : "—"}
+                      {!m.readyNow && isFinite(m.months) && <span>{tr("months", language)}</span>}
                     </div>
                     <div className="haf-verdict-sub">
                       {m.readyNow
-                        ? `You already have ${usd0(m.have)} — enough to close and keep your cushion.`
+                        ? `${tr("You already have enough to close and keep your cushion.", language)}`
                         : isFinite(m.months)
-                        ? `On track for around ${readyDate}.`
-                        : "At this savings rate you won't reach it — free up some monthly cash flow below."}
+                        ? `${tr("On track for around", language)} ${readyDate}.`
+                        : tr("At this savings rate you won't reach it — free up some monthly cash flow below.", language)}
                     </div>
                   </div>
                 </div>
@@ -1460,10 +1807,10 @@ export default function App() {
 
                 <div className="haf-slider-box">
                   <div className="haf-slider-head">
-                    <span>Cut monthly spending by <b>{usd0(cutSpending)}</b></span>
+                    <span>{tr("Cut monthly spending by", language)} <b>{usd0(cutSpending)}</b></span>
                     <span className="haf-slider-out">
-                      saving {usd0(m.monthlySave)}/mo ·{" "}
-                      {m.readyNow ? "ready now" : isFinite(m.months) ? `${Math.ceil(m.months)} mo` : "never"}
+                      {tr("saving", language)} {usd0(m.monthlySave)}/mo ·{" "}
+                      {m.readyNow ? tr("ready now", language) : isFinite(m.months) ? tr(`${Math.ceil(m.months)} mo`, language) : tr("never", language)}
                     </span>
                   </div>
                   <input
@@ -1492,7 +1839,7 @@ export default function App() {
                         width={48} tickFormatter={(v) => `$${Math.round(v / 1000)}k`} />
                       <Tooltip content={<CurrencyTip suffix=" mo" />} />
                       <ReferenceLine y={m.target} stroke={C.amber} strokeDasharray="4 4"
-                        label={{ value: "target", fill: C.amber, fontSize: 11, position: "insideTopRight" }} />
+                        label={{ value: tr("target", language), fill: C.amber, fontSize: 11, position: "insideTopRight" }} />
                       <Area name="Savings" type="monotone" dataKey="balance" stroke={C.teal} strokeWidth={2.4} fill="url(#gT)" />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -1505,29 +1852,29 @@ export default function App() {
               <div className="haf-panel">
                 <div className="haf-seg haf-seg-wide">
                   <button className={stressKind === "income" ? "on" : ""} onClick={() => setStressKind("income")}>
-                    Lose an income
+                    {tr("Lose an income", language)}
                   </button>
                   <button className={stressKind === "costs" ? "on" : ""} onClick={() => setStressKind("costs")}>
-                    Costs rise
+                    {tr("Costs rise", language)}
                   </button>
                 </div>
 
                 {stressKind === "income" ? (
                   <div className="haf-stress-controls">
                     <div className="haf-field">
-                      <span className="haf-field-label">Which income pauses?</span>
+                      <span className="haf-field-label">{tr("Which income pauses?", language)}</span>
                       <span className="haf-seg">
                         <button className={stressEarner === "1" ? "on" : ""} onClick={() => setStressEarner("1")}>
-                          Earner 1 · {usd0(num(earner1))}
+                          {tr("Earner 1", language)} · {usd0(num(earner1))}
                         </button>
                         <button className={stressEarner === "2" ? "on" : ""} onClick={() => setStressEarner("2")}>
-                          Earner 2 · {usd0(num(earner2))}
+                          {tr("Earner 2", language)} · {usd0(num(earner2))}
                         </button>
                       </span>
                     </div>
                     <div className="haf-slider-box">
                       <div className="haf-slider-head">
-                        <span>For <b>{stressMonths} months</b></span>
+                        <span>{tr("For", language)} <b>{stressMonths} {tr("months", language)}</b></span>
                       </div>
                       <input type="range" min={1} max={12} step={1} value={stressMonths}
                         onChange={(e) => setStressMonths(num(e.target.value))} aria-label="Months without income" />
@@ -1538,7 +1885,7 @@ export default function App() {
                   <div className="haf-stress-controls">
                     <div className="haf-slider-box">
                       <div className="haf-slider-head">
-                        <span>Interest rate up <b>{rateInc}%</b></span>
+                        <span>{tr("Interest rate up", language)} <b>{rateInc}%</b></span>
                         <span className="haf-slider-out">{pct(num(rate))} → {pct(num(rate) * (1 + rateInc / 100), 2)}</span>
                       </div>
                       <input type="range" min={0} max={60} step={5} value={rateInc}
@@ -1547,7 +1894,7 @@ export default function App() {
                     </div>
                     <div className="haf-slider-box">
                       <div className="haf-slider-head">
-                        <span>Insurance up <b>{insInc}%</b></span>
+                        <span>{tr("Insurance up", language)} <b>{insInc}%</b></span>
                       </div>
                       <input type="range" min={0} max={100} step={5} value={insInc}
                         onChange={(e) => setInsInc(num(e.target.value))} aria-label="Insurance increase" />
@@ -1558,11 +1905,11 @@ export default function App() {
 
                 <div className="haf-verdict haf-verdict-flush">
                   <div>
-                    <div className="haf-verdict-k">Your {usd0(m.cushion)} cushion lasts</div>
+                    <div className="haf-verdict-k">{tr("Your cushion lasts", language)}</div>
                     <div className="haf-verdict-v" style={{ color: stress.survivesEvent ? C.emerald : C.coral }}>
-                      {isFinite(stress.runway) ? stress.runway : "24+"}<span>months</span>
+                      {isFinite(stress.runway) ? stress.runway : "24+"}<span>{tr("months", language)}</span>
                     </div>
-                    <div className="haf-verdict-sub">{stress.headline}</div>
+                    <div className="haf-verdict-sub">{tr(stress.headline, language)}</div>
                   </div>
                   {stress.survivesEvent ? (
                     <Badge tone="ok">Holds up</Badge>
@@ -1574,28 +1921,22 @@ export default function App() {
                 {stressKind === "income" && (
                   stress.survivesEvent ? (
                     <Flag tone="ok" icon={CheckCircle2}>
-                      You'd clear the {stress.eventLen}-month gap with about{" "}
-                      <b>{isFinite(stress.runway) ? stress.runway - stress.eventLen : "several"}</b> months
-                      of cushion to spare — burning ~{usd0(Math.abs(Math.min(0, stress.monthly0)))}/mo while it lasts.
+                      {tr("This emergency cushion survives the lost-income period with room left.", language)}
                     </Flag>
                   ) : (
                     <Flag tone="bad" icon={AlertTriangle}>
-                      The cushion empties in about <b>{stress.runway}</b> months —{" "}
-                      {stress.eventLen - stress.runway} month(s) short of the{" "}
-                      {stress.eventLen}-month gap. A bigger cushion or lower payment closes it.
+                      {tr("The cushion runs out before the income gap ends. A bigger cushion or lower payment closes it.", language)}
                     </Flag>
                   )
                 )}
                 {stressKind === "costs" && (
                   stress.survivesEvent ? (
                     <Flag tone="ok" icon={CheckCircle2}>
-                      Even with higher costs you stay cash-flow positive, so the
-                      cushion isn't drained.
+                      <T>Even with higher costs you stay cash-flow positive, so the cushion isn't drained.</T>
                     </Flag>
                   ) : (
                     <Flag tone="bad" icon={AlertTriangle}>
-                      Higher costs flip you to a monthly shortfall — the cushion
-                      drains in about <b>{stress.runway}</b> months.
+                      {tr("Higher costs flip you to a monthly shortfall — the cushion drains in about months.", language)}
                     </Flag>
                   )
                 )}
@@ -1627,13 +1968,12 @@ export default function App() {
             {tab === "reverse" && (
               <div className="haf-panel">
                 <p className="haf-rev-lead">
-                  Work backward: pick a timeline and a down payment, and see the
-                  monthly savings it takes to get there on this {usd0(m.price)} home.
+                  {tr("Work backward: pick a timeline and a down payment, and see the monthly savings it takes to get there on this home.", language)}
                 </p>
                 <div className="haf-stress-controls">
                   <div className="haf-slider-box">
                     <div className="haf-slider-head">
-                      <span>Buy in <b>{revYears} {revYears === 1 ? "year" : "years"}</b></span>
+                      <span>{tr("Buy in", language)} <b>{revYears} {tr(revYears === 1 ? "year" : "years", language)}</b></span>
                     </div>
                     <input type="range" min={1} max={10} step={1} value={revYears}
                       onChange={(e) => setRevYears(num(e.target.value))} aria-label="Years to buy" />
@@ -1641,7 +1981,7 @@ export default function App() {
                   </div>
                   <div className="haf-slider-box">
                     <div className="haf-slider-head">
-                      <span>With <b>{revDownPct}% down</b></span>
+                      <span>{tr("With down", language)} <b>{revDownPct}%</b></span>
                       <span className="haf-slider-out">{usd0(reverse.reqDown)}</span>
                     </div>
                     <input type="range" min={3} max={30} step={1} value={revDownPct}
@@ -1652,7 +1992,7 @@ export default function App() {
 
                 <div className="haf-verdict haf-verdict-flush">
                   <div>
-                    <div className="haf-verdict-k">You'd need to save</div>
+                    <div className="haf-verdict-k">{tr("You'd need to save", language)}</div>
                     <div className="haf-verdict-v" style={{ color: C.teal }}>
                       {usd0(reverse.perMonth)}<span>/mo</span>
                     </div>
@@ -1665,15 +2005,11 @@ export default function App() {
 
                 {reverse.gapVsNow <= 0 ? (
                   <Flag tone="ok" icon={CheckCircle2}>
-                    You're already saving {usd0(m.savingsNow)}/mo — that's{" "}
-                    <b>{usd0(Math.abs(reverse.gapVsNow))}/mo more</b> than you need.
-                    You could hit this target sooner or aim for a larger down payment.
+                    {tr("You are already saving more than this target needs. You could hit it sooner or aim for a larger down payment.", language)}
                   </Flag>
                 ) : (
                   <Flag tone="warn" icon={TrendingDown}>
-                    You're saving {usd0(m.savingsNow)}/mo — about{" "}
-                    <b>{usd0(reverse.gapVsNow)}/mo short</b>. Free up that much, stretch
-                    the timeline, or lower the down payment to close the gap.
+                    {tr("You are short of this target. Free up cash flow, stretch the timeline, or lower the down payment.", language)}
                   </Flag>
                 )}
 
@@ -1689,8 +2025,7 @@ export default function App() {
         )}
 
         <footer className="haf-foot">
-          Estimates for planning, not a loan offer. Taxes, insurance, and PMI
-          vary by lender and location — confirm real quotes before you commit.
+          {tr("Estimates for planning, not a loan offer. Taxes, insurance, and PMI vary by lender and location — confirm real quotes before you commit.", language)}
         </footer>
       </div>
     </div>
@@ -1711,6 +2046,7 @@ function RealLifeModule({
   runwayMonths,
   readiness,
 }) {
+  const lang = useContext(LanguageContext);
   const housingLabel = life.housingType === "owned" ? "Mortgage / home cost" : "Rent today";
   return (
     <div className="haf-single">
@@ -1725,17 +2061,17 @@ function RealLifeModule({
         <aside className="haf-inputs">
           <section className="haf-group is-open">
             <div className="haf-group-head">
-              <span className="haf-group-title"><Wallet size={16} /> Real life / actual expenses</span>
+              <span className="haf-group-title"><Wallet size={16} /> <Term term="Real life / actual expenses">{tr("Real life / actual expenses", lang)}</Term></span>
             </div>
             <div className="haf-group-body">
               <div className="haf-field">
-                <span className="haf-field-label">Housing status</span>
+                <span className="haf-field-label"><Term term="Housing status">{tr("Housing status", lang)}</Term></span>
                 <span className="haf-seg haf-seg-wide">
                   <button className={life.housingType === "rent" ? "on" : ""} onClick={() => setField("housingType")("rent")}>
-                    Renting
+                    {tr("Renting", lang)}
                   </button>
                   <button className={life.housingType === "owned" ? "on" : ""} onClick={() => setField("housingType")("owned")}>
-                    Own
+                    {tr("Owned", lang)}
                   </button>
                 </span>
               </div>
@@ -1743,7 +2079,7 @@ function RealLifeModule({
                 <Field label="Income — earner 1" prefix="$" value={life.earner1} onChange={setField("earner1")} />
                 <Field label="Income — earner 2" prefix="$" value={life.earner2} onChange={setField("earner2")} />
               </div>
-              <div className="haf-field-foot">Household: <b>{usd0(m.income)}/mo</b></div>
+              <div className="haf-field-foot">{tr("Household", lang)}: <b>{usd0(m.income)}/mo</b></div>
               {life.housingType === "owned" ? (
                 <Field label={housingLabel} prefix="$" value={life.committedHomeCost} onChange={setField("committedHomeCost")} />
               ) : (
@@ -1778,7 +2114,7 @@ function RealLifeModule({
             <div className="haf-panel-head">
               <div>
                 <h3><T>Actual monthly picture</T></h3>
-                <p>This is the saved baseline every life move uses. Change it here first, then test scenarios.</p>
+                <p><T>This is the saved baseline every life move uses. Change it here first, then test scenarios.</T></p>
               </div>
               <Badge tone="neutral">Auto-saved</Badge>
             </div>
@@ -1810,7 +2146,7 @@ function RealLifeModule({
               </div>
             </div>
             <Flag tone={readiness.tone} icon={baseMonthlyCushion < 0 ? AlertTriangle : CheckCircle2}>
-              This is your actual baseline. Life moves should be judged against this, not against numbers hidden inside one scenario.
+              <T>This is your actual baseline. Life moves should be judged against this, not against numbers hidden inside one scenario.</T>
             </Flag>
           </section>
         </main>
@@ -1842,6 +2178,7 @@ function SnapshotDashboard({
   setStackMove,
   setModule,
 }) {
+  const lang = useContext(LanguageContext);
   const moveOptions = [
     { key: "home", label: "Buy a home", icon: Home },
     { key: "rent", label: "Rent / move", icon: KeyRound },
@@ -1891,7 +2228,7 @@ function SnapshotDashboard({
           <div className="haf-panel-head">
             <div>
               <h3><T>Choose life moves to check</T></h3>
-              <p>Turn on only the scenarios you care about right now. Your choices are saved.</p>
+              <p><T>Turn on only the scenarios you care about right now. Your choices are saved.</T></p>
             </div>
           </div>
           <div className="haf-check-grid">
@@ -1903,7 +2240,7 @@ function SnapshotDashboard({
                   onChange={(e) => setMoveEnabled(key)(e.target.checked)}
                 />
                 <Icon size={17} strokeWidth={2.1} />
-                <span>{label}</span>
+                <span>{tr(label, lang)}</span>
               </label>
             ))}
           </div>
@@ -1913,7 +2250,7 @@ function SnapshotDashboard({
           <div className="haf-panel-head">
             <div>
               <h3><T>Stack moves together</T></h3>
-              <p>Mix scenarios to see whether a few big choices can fit at the same time.</p>
+              <p><T>Mix scenarios to see whether a few big choices can fit at the same time.</T></p>
             </div>
             <Badge tone={stackTone}>{stackLabel}</Badge>
           </div>
@@ -1926,7 +2263,7 @@ function SnapshotDashboard({
                   onChange={(e) => setStackMove(key)(e.target.checked)}
                 />
                 <Icon size={17} strokeWidth={2.1} />
-                <span>{label}</span>
+                <span>{tr(label, lang)}</span>
               </label>
             ))}
           </div>
@@ -1957,7 +2294,7 @@ function SnapshotDashboard({
             </div>
           ) : (
             <Flag tone="warn" icon={AlertTriangle}>
-              Choose two or more moves above when you want to test real-life temptation stacking.
+              <T>Choose two or more moves above when you want to test real-life temptation stacking.</T>
             </Flag>
           )}
           {selectedStack.length > 0 && (
@@ -1977,7 +2314,7 @@ function SnapshotDashboard({
           <div className="haf-panel-head">
             <div>
               <h3><T>Your life snapshot</T></h3>
-              <p><Term term="life snapshot">Life snapshot</Term> is the saved baseline every plan reads from.</p>
+              <p><T>Life snapshot is the saved baseline every plan reads from.</T></p>
             </div>
             <Badge tone="neutral">Auto-saved</Badge>
           </div>
@@ -2014,11 +2351,11 @@ function SnapshotDashboard({
           <div className="haf-panel-head">
             <div>
               <h3><T>Connected plans</T></h3>
-              <p>These scenarios use your saved snapshot, so one real move changes the next one.</p>
+              <p><T>These scenarios use your saved snapshot, so one real move changes the next one.</T></p>
             </div>
           </div>
           <div className="haf-plan-stack">
-            {enabledMoves.home && <PlanCard icon={Home} title="Buy a home" value={m.readyNow ? "Ready now" : isFinite(m.months) ? `${Math.ceil(m.months)} mo` : "Not yet"} sub={`${usd0(m.housingMo)}/mo after purchase`} tone={m.readyNow ? "ok" : "warn"} onOpen={() => setModule("home")} />}
+            {enabledMoves.home && <PlanCard icon={Home} title="Buy a home" value={m.readyNow ? tr("Ready now", lang) : isFinite(m.months) ? `${Math.ceil(m.months)} mo` : tr("Not yet", lang)} sub={`${usd0(m.housingMo)}/mo after purchase`} tone={m.readyNow ? "ok" : "warn"} onOpen={() => setModule("home")} />}
             {enabledMoves.rent && <PlanCard icon={KeyRound} title="Rent / move" value={`${rentMoveMonthlyDelta >= 0 ? "+" : ""}${usd0(rentMoveMonthlyDelta)}/mo`} sub={`${usd0(rentMoveUpfront)} upfront`} tone={rentMoveMonthlyDelta <= baseMonthlyCushion ? "ok" : "warn"} onOpen={() => setModule("rent")} />}
             {enabledMoves.car && <PlanCard icon={Car} title="Buy a car" value={`${usd0(carMonthly)}/mo`} sub={`Leaves ${usd0(baseMonthlyCushion - carMonthly)}/mo cushion`} tone={carTone} onOpen={() => setModule("car")} />}
             {enabledMoves.child && <PlanCard icon={Baby} title="Baby / child" value={`${usd0(childMonthly)}/mo`} sub={`${usd0(childUpfront)} upfront or leave impact`} tone={baseMonthlyCushion - childMonthly >= 0 ? "ok" : "bad"} onOpen={() => setModule("child")} />}
@@ -2034,21 +2371,21 @@ function SnapshotDashboard({
           <div className="haf-panel-head">
             <div>
               <h3><T>Committed moves</T></h3>
-              <p><Term term="committed">Committed</Term> moves are real changes already applied to your snapshot.</p>
+              <p><T>Committed moves are real changes already applied to your snapshot.</T></p>
             </div>
           </div>
           {committed.length ? (
             <div className="haf-event-list">
               {committed.map((event) => (
                 <div key={`${event.type}-${event.date}`} className="haf-event">
-                  <b>{event.label}</b>
-                  <span>{usd0(event.monthlyImpact)}/mo · {usd0(event.cashImpact)} cash</span>
+                  <b>{tr(event.label, lang)}</b>
+                  <span>{usd0(event.monthlyImpact)}/mo · {tr(`${usd0(event.cashImpact)} cash`, lang)}</span>
                 </div>
               ))}
             </div>
           ) : (
             <Flag tone="warn" icon={AlertTriangle}>
-              No committed moves yet. Use a module as a <b>scenario</b>, then add it to your life when it becomes real.
+              <T>No committed moves yet. Use a module as a scenario, then add it to your life when it becomes real.</T>
             </Flag>
           )}
         </section>
@@ -2060,6 +2397,7 @@ function SnapshotDashboard({
 }
 
 function RentMoveModule({ plan, setField, activeHousing, currentUtilities, monthlyDelta, upfront, baseMonthlyCushion }) {
+  const lang = useContext(LanguageContext);
   const netRent = Math.max(0, num(plan.newRent) - num(plan.roommateShare));
   const newMonthly = netRent + num(plan.newUtilities);
   const cushionAfter = baseMonthlyCushion - monthlyDelta;
@@ -2069,7 +2407,7 @@ function RentMoveModule({ plan, setField, activeHousing, currentUtilities, month
       <div className="haf-layout">
         <aside className="haf-inputs">
           <section className="haf-group is-open">
-            <div className="haf-group-head"><span className="haf-group-title"><KeyRound size={16} /> Rent / move scenario</span></div>
+            <div className="haf-group-head"><span className="haf-group-title"><KeyRound size={16} /> {tr("Rent / move scenario", lang)}</span></div>
             <div className="haf-group-body">
               <Field label="New rent" prefix="$" value={plan.newRent} onChange={setField("newRent")} />
               <Field label="Roommate share" hint="/mo" prefix="$" value={plan.roommateShare} onChange={setField("roommateShare")} />
@@ -2084,11 +2422,11 @@ function RentMoveModule({ plan, setField, activeHousing, currentUtilities, month
           <section className="haf-panel">
             <div className="haf-verdict">
               <div>
-                <div className="haf-verdict-k">This move changes monthly life by</div>
+                <div className="haf-verdict-k">{tr("This move changes monthly life by", lang)}</div>
                 <div className="haf-verdict-v" style={{ color: tone === "bad" ? C.coral : tone === "warn" ? C.amber : C.emerald }}>
                   {monthlyDelta >= 0 ? "+" : ""}{usd0(monthlyDelta)}<span>/mo</span>
                 </div>
-                <div className="haf-verdict-sub">Leaves {usd0(cushionAfter)}/mo after your current life snapshot.</div>
+                <div className="haf-verdict-sub">{tr(`Leaves ${usd0(cushionAfter)}/mo after your current life snapshot.`, lang)}</div>
               </div>
               <Badge tone={tone}>{tone === "ok" ? "Fits" : tone === "warn" ? "Tight" : "Risky"}</Badge>
             </div>
@@ -2101,7 +2439,7 @@ function RentMoveModule({ plan, setField, activeHousing, currentUtilities, month
               <Mini k="Cushion after move" v={usd0(cushionAfter)} />
             </div>
             <Flag tone={tone} icon={tone === "bad" ? AlertTriangle : CheckCircle2}>
-              A move should leave enough <b>monthly cushion</b> for surprises after rent, bills, and normal life.
+              {tr("A move should leave enough monthly cushion for surprises after rent, bills, and normal life.", lang)}
             </Flag>
           </section>
         </main>
@@ -2125,6 +2463,7 @@ function CarModule({
   emergencyKeep,
   savings,
 }) {
+  const lang = useContext(LanguageContext);
   const termMonths = Math.max(0, Math.round(num(plan.termMonths)));
   const totalInterest = Math.max(0, loanPayment * termMonths - amountFinanced);
   const cashGap = Math.max(0, emergencyKeep - savingsAfter);
@@ -2141,31 +2480,31 @@ function CarModule({
       ? {
           tone: "bad",
           icon: AlertTriangle,
-          body: <>This car creates a monthly shortfall. The payment and car costs are more than your current <b>monthly cushion</b>.</>,
+          body: "This car creates a monthly shortfall. The payment and car costs are more than your current monthly cushion.",
         }
       : savingsAfter < emergencyKeep
       ? {
           tone: "bad",
           icon: AlertTriangle,
-          body: <>The monthly payment works, but the down payment leaves savings <b>{usd0(cashGap)} below</b> your emergency cushion.</>,
+          body: "The monthly payment works, but the down payment leaves savings below your emergency cushion.",
         }
       : tone === "warn"
       ? {
           tone: "warn",
           icon: TrendingDown,
-          body: <>This can work, but it leaves a thin buffer. A lower price, bigger down payment, or shorter term may make it sturdier.</>,
+          body: "This can work, but it leaves a thin buffer. A lower price, bigger down payment, or shorter term may make it sturdier.",
         }
       : {
           tone: "ok",
           icon: CheckCircle2,
-          body: <>This keeps your monthly cushion positive and leaves savings above your emergency floor.</>,
+          body: "This keeps your monthly cushion positive and leaves savings above your emergency floor.",
         };
   return (
     <div className="haf-single">
       <div className="haf-layout">
         <aside className="haf-inputs">
           <section className="haf-group is-open">
-            <div className="haf-group-head"><span className="haf-group-title"><Car size={16} /> Car scenario</span></div>
+            <div className="haf-group-head"><span className="haf-group-title"><Car size={16} /> {tr("Car scenario", lang)}</span></div>
             <div className="haf-group-body">
               <Field label="Car price" prefix="$" value={plan.price} onChange={setField("price")} />
               <div className="haf-grid2">
@@ -2180,7 +2519,7 @@ function CarModule({
               <Field label="Gas / charging" prefix="$" value={plan.fuel} onChange={setField("fuel")} />
               <Field label="Maintenance" prefix="$" value={plan.maintenance} onChange={setField("maintenance")} />
               <div className="haf-field-foot haf-foot-sum">
-                Estimated loan payment: <b>{usd0(loanPayment)}/mo</b>
+                {tr("Estimated loan payment", lang)}: <b>{usd0(loanPayment)}/mo</b>
               </div>
             </div>
           </section>
@@ -2189,12 +2528,12 @@ function CarModule({
           <section className="haf-panel">
             <div className="haf-verdict">
               <div>
-                <div className="haf-verdict-k">This car adds</div>
+                <div className="haf-verdict-k">{tr("This car adds", lang)}</div>
                 <div className="haf-verdict-v" style={{ color: tone === "bad" ? C.coral : tone === "warn" ? C.amber : C.emerald }}>
                   {usd0(monthly)}<span>/mo</span>
                 </div>
                 <div className="haf-verdict-sub">
-                  Leaves {usd0(cushionAfter)}/mo monthly cushion and {usd0(savingsAfter)} saved after down payment.
+                  {tr(`Leaves ${usd0(cushionAfter)}/mo monthly cushion and ${usd0(savingsAfter)} saved after down payment.`, lang)}
                 </div>
               </div>
               <Badge tone={tone}>{label}</Badge>
@@ -2241,7 +2580,7 @@ function CarModule({
               </div>
             </div>
             <Flag tone={flag.tone} icon={flag.icon}>
-              {flag.body}
+              {tr(flag.body, lang)}
             </Flag>
           </section>
         </main>
@@ -2251,6 +2590,7 @@ function CarModule({
 }
 
 function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, savings, onCommit }) {
+  const lang = useContext(LanguageContext);
   const cushionAfter = baseMonthlyCushion - monthly;
   const savingsAfter = savings - upfront;
   const tone = cushionAfter < 0 || savingsAfter < 0 ? "bad" : cushionAfter < 500 ? "warn" : "ok";
@@ -2260,16 +2600,16 @@ function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, sav
       <div className="haf-layout">
         <aside className="haf-inputs">
           <section className="haf-group is-open">
-            <div className="haf-group-head"><span className="haf-group-title"><Baby size={16} /> Baby / child scenario</span></div>
+            <div className="haf-group-head"><span className="haf-group-title"><Baby size={16} /> {tr("Baby / child scenario", lang)}</span></div>
             <div className="haf-group-body">
               <div className="haf-field">
-                <span className="haf-field-label">Path</span>
+                <span className="haf-field-label">{tr("Path", lang)}</span>
                 <span className="haf-seg haf-seg-wide">
                   <button className={plan.path === "birth" ? "on" : ""} onClick={() => setField("path")("birth")}>
-                    Birth
+                    {tr("Birth", lang)}
                   </button>
                   <button className={plan.path === "adoption" ? "on" : ""} onClick={() => setField("path")("adoption")}>
-                    Adoption
+                    {tr("Adoption", lang)}
                   </button>
                 </span>
               </div>
@@ -2295,12 +2635,12 @@ function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, sav
           <section className="haf-panel">
             <div className="haf-verdict">
               <div>
-                <div className="haf-verdict-k">{label} adds about</div>
+                <div className="haf-verdict-k">{tr(label, lang)} {tr("adds about", lang)}</div>
                 <div className="haf-verdict-v" style={{ color: tone === "bad" ? C.coral : tone === "warn" ? C.amber : C.emerald }}>
                   {usd0(monthly)}<span>/mo</span>
                 </div>
                 <div className="haf-verdict-sub">
-                  Leaves {usd0(cushionAfter)}/mo monthly cushion and {usd0(savingsAfter)} saved after upfront costs.
+                  {tr(`Leaves ${usd0(cushionAfter)}/mo monthly cushion and ${usd0(savingsAfter)} saved after upfront costs.`, lang)}
                 </div>
               </div>
               <Badge tone={tone}>{tone === "ok" ? "Fits" : tone === "warn" ? "Tight" : "Risky"}</Badge>
@@ -2326,16 +2666,14 @@ function ChildModule({ plan, setField, monthly, upfront, baseMonthlyCushion, sav
             </div>
             <div className="haf-action-row">
               <button className="haf-primary-action" onClick={onCommit}>
-                <Save size={16} strokeWidth={2.1} /> Add this child plan to my life
+                <Save size={16} strokeWidth={2.1} /> {tr("Add this child plan to my life", lang)}
               </button>
               <span>
-                This adds childcare and child-related groceries/supplies to your saved snapshot,
-                then subtracts {usd0(upfront)} from savings.
+                {tr("This adds childcare and child-related groceries/supplies to your saved snapshot, then subtracts upfront from savings.", lang)}
               </span>
             </div>
             <Flag tone={tone} icon={tone === "bad" ? AlertTriangle : CheckCircle2}>
-              This is a planning estimate. Real costs can swing a lot by insurance, family help,
-              leave policy, adoption path, and local childcare prices.
+              <T>This is a planning estimate. Real costs can swing a lot by insurance, family help, leave policy, adoption path, and local childcare prices.</T>
             </Flag>
           </section>
         </main>
@@ -2356,19 +2694,20 @@ function PlanCard({ icon: Icon, title, value, sub, tone, onOpen }) {
 }
 
 function GlossaryPanel() {
+  const lang = useContext(LanguageContext);
   return (
     <section className="haf-panel">
       <div className="haf-panel-head">
         <div>
           <h3><BookOpen size={17} strokeWidth={2.1} /> <T>Glossary</T></h3>
-          <p>Plain-language definitions for terms people may not know yet.</p>
+          <p><T>Plain-language definitions for terms people may not know yet.</T></p>
         </div>
       </div>
       <div className="haf-glossary">
         {Object.entries(GLOSSARY).map(([term, definition]) => (
           <details key={term}>
-            <summary>{term}</summary>
-            <p>{definition}</p>
+            <summary>{tr(term, lang)}</summary>
+            <p>{tr(definition, lang)}</p>
           </details>
         ))}
       </div>
@@ -2384,7 +2723,7 @@ function Vital({ icon: Icon, label, value, sub }) {
         <Icon size={15} strokeWidth={2.1} />
         <span>{tr(label, lang)}</span>
       </div>
-      <div className="haf-vital-v">{value}</div>
+      <div className="haf-vital-v">{typeof value === "string" ? tr(value, lang) : value}</div>
       <div className="haf-vital-sub">{typeof sub === "string" ? tr(sub, lang) : sub}</div>
     </div>
   );
@@ -2403,11 +2742,12 @@ function Mini({ k, v, accent }) {
   const lang = useContext(LanguageContext);
   return (
     <div className={`haf-mini ${accent ? "is-accent" : ""}`}>
-      <span>{tr(k, lang)}</span><b>{v}</b>
+      <span>{tr(k, lang)}</span><b>{typeof v === "string" ? tr(v, lang) : v}</b>
     </div>
   );
 }
 function Flag({ tone, icon: Icon, children }) {
+  const lang = useContext(LanguageContext);
   const map = {
     ok: { bg: "#EAF4EE", bd: "#C4E1CF", fg: C.emerald },
     warn: { bg: "#FBF3E2", bd: "#EDD9AE", fg: "#A86F12" },
@@ -2416,15 +2756,16 @@ function Flag({ tone, icon: Icon, children }) {
   return (
     <div className="haf-flag" style={{ background: map.bg, borderColor: map.bd }}>
       <Icon size={17} strokeWidth={2.2} style={{ color: map.fg, flexShrink: 0, marginTop: 1 }} />
-      <span>{children}</span>
+      <span>{typeof children === "string" ? tr(children, lang) : children}</span>
     </div>
   );
 }
 function RevBar({ label, value, max, color }) {
+  const lang = useContext(LanguageContext);
   const w = max > 0 ? clamp((value / max) * 100, 0, 100) : 0;
   return (
     <div className="haf-revbar">
-      <div className="haf-revbar-top"><span>{label}</span><b>{usd0(value)}/mo</b></div>
+      <div className="haf-revbar-top"><span>{tr(label, lang)}</span><b>{usd0(value)}/mo</b></div>
       <div className="haf-revbar-track">
         <div className="haf-revbar-fill" style={{ width: `${w}%`, background: color }} />
       </div>
